@@ -8,7 +8,7 @@ from render import render
 if __name__ == '__main__':
 
     pygame.init()
-    windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     game = game.Game();
 
     while True:
@@ -17,10 +17,12 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            #elif event.type == :
+            #    pass
        
         #update()
 
-        render(game, windowSurface)
+        render(game, window_surface)
         pygame.display.flip()
 
         

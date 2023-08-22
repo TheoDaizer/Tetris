@@ -1,16 +1,18 @@
-from point import Point
+ï»¿from point import Point
 
-lineShape = [(Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
-             (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
-             (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
-             (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
-             ];
+line_shape = [
+    (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
+    (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
+    (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
+    (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
+    ];
 
 
-allShapes = (lineShape, );
+all_shapes = (line_shape, );
 
 
 class Figure:
+    """Class represents playing figures"""
 
     def __init__(self, shape: list, position: Point, color, orientation: int = 0):
         self.shape = shape
@@ -19,5 +21,5 @@ class Figure:
         self.color = color
 
     def move(self, delta: Point):
-        #ïðîâåðêè
+        #Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ¸
         self.position.add(delta)

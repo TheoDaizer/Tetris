@@ -1,6 +1,8 @@
-
+﻿
 
 class Point:
+    """Class for representing 2D vector"""
+
     def __init__(self, x: int, y: int) -> None:
         self.x = x
         self.y = y
