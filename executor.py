@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     pygame.init()
     windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    game = game.Game();
+    game = game.Game()
 
     while True:
         #input
@@ -22,6 +22,3 @@ if __name__ == '__main__':
 
         render(game, windowSurface)
         pygame.display.flip()
-
-        
-
