@@ -10,3 +10,6 @@ class Point:
     def add(self, point):
         self.x += point.x
         self.y += point.y
+
+    def __repr__(self):
+        return f'x:{self.x} y:{self.y}'

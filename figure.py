@@ -1,4 +1,5 @@
-﻿from point import Point
+from point import Point
+from figures import *
 
 line_shape = [
     (Point(-1,0), Point(0,0), Point(1,0), Point(2,0)),
@@ -21,5 +22,7 @@ class Figure:
         self.color = color
 
     def move(self, delta: Point):
-        #проверки
         self.position.add(delta)
+
+
+square = Figure(square_form, Point(0, 0), (200, 100, 0), 0)
