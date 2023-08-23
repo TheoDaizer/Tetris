@@ -21,7 +21,7 @@ class Game:
         self.figure = Figure(all_shapes[index], Point(5,0), (255,0,0))
 
 
-class Node:
-    def __init__(self):
-        self.is_active = False
-        self.color = (0, 0, 0)
+#class Node:
+#    def __init__(self):
+#        self.is_active = False
+#        self.color = (0, 0, 0)

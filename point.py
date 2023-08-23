@@ -7,9 +7,8 @@ class Point:
         self.x = x
         self.y = y
 
-    def add(self, point):
-        self.x += point.x
-        self.y += point.y
+    def __add__(self, point):
+        return Point(self.x + point.x, self.y + point.y)
 
     def __repr__(self):
         return f'x:{self.x} y:{self.y}'
