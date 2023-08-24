@@ -1,3 +1,4 @@
 ﻿import pygame
 
-def render(game: Game, dt):
+#def render(game: Game, dt):
+#    pass

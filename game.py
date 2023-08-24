@@ -1,5 +1,6 @@
-from constants import FALLINGSPEED, WINDOWHEIGHT, WINDOWWIDTH
+from constants import FALLINGSPEED, FASTFALLINGSPEED, WINDOWHEIGHT, WINDOWWIDTH
 import random as rnd
+import pygame
 from point import Point
 from figure import Figure, all_shapes
 
@@ -20,8 +21,19 @@ class Game:
         self.figure = Figure(all_shapes[index], Point(5,0), (255,0,0))
 
     def update(self, dt :int):
-        self.figure.move(Point(0, dt * FALLINGSPEED))
+        self.figure.move(Point(0, dt * self.figure.speed))
     
+    def keyboard_input(self, event):
+        if(event.type == pygame.KEYDOWN):
+            if(event.key == pygame.K_LEFT):
+                self.figure.move(Point(-1, 0))
+            elif(event.key == pygame.K_RIGHT):
+                self.figure.move(Point(1, 0))
+            elif(event.key == pygame.K_DOWN):
+                self.figure.speed = FASTFALLINGSPEED;
+        elif(event.type == pygame.KEYUP):
+            if(event.key == pygame.K_DOWN):
+                self.figure.speed = FALLINGSPEED;
 
 #class Node:
 #    def __init__(self):

@@ -22,8 +22,8 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            #elif event.type == :
-            #    pass
+            elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+                game.keyboard_input(event)
        
         game.update(dt)
 
