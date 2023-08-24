@@ -1,13 +1,13 @@
 ﻿import pygame
 from constants import TILESIZE
-from game import Game, Grid
+from game import Game, Field
 from point import Point
 from figure import Figure
 
-def renderGrid(grid: Grid, window_surface):
+def renderField(field: Field, window_surface):
     """Rendering game grid with no fill rectangles"""
-    for i in range(len(grid.grid)):
-        for j in range(len(grid.grid[i])):
+    for i in range(len(field.cells)):
+        for j in range(len(field.cells[i])):
             r = pygame.Rect(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE)
 
             color = (100, 100, 100);
@@ -28,8 +28,8 @@ def renderFigure(figure: Figure, window_surface):
     oriented_shape = figure.shape[figure.orientation]
     for i in range(len(figure.shape)):
         r = pygame.Rect(
-            (figure.position.x + oriented_shape[i].x) * TILESIZE, 
-            (figure.position.y + oriented_shape[i].y) * TILESIZE, 
+            (int(figure.position.x) + oriented_shape[i].x) * TILESIZE, 
+            (int(figure.position.y) + oriented_shape[i].y) * TILESIZE, 
             TILESIZE, 
             TILESIZE
             )
@@ -38,4 +38,4 @@ def renderFigure(figure: Figure, window_surface):
 def render(game: Game, window_surface):
     """Main rendering function, that call other renderers"""
     renderFigure(game.figure, window_surface)
-    renderGrid(game.grid, window_surface)
+    renderField(game.field, window_surface)

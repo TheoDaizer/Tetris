@@ -8,10 +8,15 @@ from render import render
 if __name__ == '__main__':
 
     pygame.init()
+    clock = pygame.time.Clock()
+
     window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     game = game.Game()
 
+    clock.tick() #time restart
     while True:
+        dt = clock.tick(FPS) # time from previous frame in milliseconds. argument provides fps limitation
+
         #input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -20,7 +25,8 @@ if __name__ == '__main__':
             #elif event.type == :
             #    pass
        
-        #update()
+        game.update(dt)
 
-        render(game, window_surface)
-        pygame.display.flip()
+        window_surface.fill("black") # "clearing screen" by fillin it with one color
+        render(game, window_surface) 
+        pygame.display.flip() # updating screen
