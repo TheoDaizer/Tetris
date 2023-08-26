@@ -1,4 +1,5 @@
-﻿
+﻿import sys
+
 
 class Point:
     """Class for representing 2D vector"""
@@ -12,3 +13,10 @@ class Point:
 
     def __repr__(self):
         return f'x:{self.x} y:{self.y}'
+
+
+if __name__ == '__main__':
+    p = Point(2, 3)
+    p2 = 2
+    print(sys.getsizeof(p))
+    print(sys.getsizeof(p2))
