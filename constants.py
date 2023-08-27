@@ -11,4 +11,4 @@ WINDOWHEIGHT = GRIDHEIGHT * TILESIZE  # Game window height in pixels
 FPS = 60 # game speed is fixed to 60 frames per second
 
 FALLINGSPEED = 0.001     # figure falling speed in plying field's cell per millisecond (cell/ms)
-FASTFALLINGSPEED = 0.005  # accelerated figure falling speed (cell/ms)
+FASTFALLINGSPEED = 0.01  # accelerated figure falling speed (cell/ms)
