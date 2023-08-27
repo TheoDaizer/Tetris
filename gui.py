@@ -13,10 +13,10 @@ if __name__ == '__main__':
     pygame.display.set_caption('PvP Tetris')
     clock = pygame.time.Clock()
 
-    window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), pygame.RESIZABLE)
-    background = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+    window_surface = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
+    background = pygame.Surface((800, 600))
     background.fill(pygame.Color('#000000'))
-    manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
+    manager = pygame_gui.UIManager((800, 600))
 
     confirm_start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 240), (300, 100)),
                                                         text='Press Space to Start',
@@ -61,6 +61,10 @@ if __name__ == '__main__':
         tetris_game = game.Game()
         running = True
         clock.tick()  # time restart
+
+        game_part = pygame.surface.Surface((800, 400))
+        gui_part = pygame.surface.Surface((800, 200))
+
         while running:
             dt_frame = clock.tick(FPS)  # time from previous frame in milliseconds. argument provides fps limitation
 
