@@ -29,7 +29,7 @@ class Game:
 
     def update(self, dt: int):
         delta = Point(0, dt * self.figure.speed)
-        if(self.check_vert_collision(delta)):
+        if(self.check_vert_collision(delta, self.figure.orientation)):
             self.freeze_figure()
         else:
             self.figure.move(delta)
@@ -39,21 +39,20 @@ class Game:
 
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 delta = Point(-1, 0)
-                if not (self.check_hor_collision(delta)):
+                if not (self.check_hor_collision(delta, self.figure.orientation)):
                     self.figure.move(delta)
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 delta = Point(1, 0)
-                if not (self.check_hor_collision(delta)):
+                if not (self.check_hor_collision(delta, self.figure.orientation)):
                     self.figure.move(delta)
-            if event.key == pygame.K_q:
-                self.figure.rotate(False)
-            if event.key == pygame.K_e:
-                self.figure.rotate(True)
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
+                delta = Point(0, 0)
+                orientation = (self.figure.orientation + 1) % len(self.figure.shape)
+                if not self.check_vert_collision(delta, orientation) and not self.check_vert_collision(delta, orientation):
+                    self.figure.rotate()
 
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.figure.speed = FASTFALLINGSPEED
-            #if event.key == pygame.K_UP:
-            #    self.figure.move(Point(0, -1))
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
@@ -70,24 +69,24 @@ class Game:
         self.figure = Figure(all_shapes[index_shape], Point(4, 0), all_colors[index_color])
 
     # check for horizontal collision. if there is a collision, the figure doesnt move
-    def check_hor_collision(self, delta: Point):
+    def check_hor_collision(self, delta: Point, orientation: int):
         if(delta.y > 1):
             delta.y = 1
 
         new_position = self.figure.position + delta
-        for pt in self.figure.shape[self.figure.orientation]:
+        for pt in self.figure.shape[orientation]:
             point_position = new_position + pt
             if not (0 <= point_position.x < GRIDWIDTH) or (self.field.cells[int(point_position.x)][int(point_position.y)].is_active):
                 return True
         return False
 
     # check for vert collision. if there is a collision, new figure creates and fiels state updates
-    def check_vert_collision(self, delta: Point):
+    def check_vert_collision(self, delta: Point, orientation: int):
         if(delta.y > 1):
             delta.y = 1
 
         new_position = self.figure.position + delta
-        for pt in self.figure.shape[self.figure.orientation]:
+        for pt in self.figure.shape[orientation]:
             point_position = new_position + pt
             if not (0 <= point_position.y < GRIDHEIGHT) or (self.field.cells[int(point_position.x)][int(point_position.y)].is_active):
                 return True

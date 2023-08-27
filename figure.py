@@ -4,7 +4,8 @@ from constants import FALLINGSPEED
 from colors import *
 
 all_shapes = (line_form, l_form_l, l_form_r, t_form, z_form_l, z_form_r, square_form)
-all_colors = (RED, GREEN, BLUE, YELLOW, LIGHT_BLUE, PINK)
+
+all_colors = (RED, GREEN, BLUE, YELLOW, PINK, LIGHT_BLUE)
 
 class Figure:
     """Class represents playing figures"""
@@ -16,11 +17,8 @@ class Figure:
         self.color = color
         self.speed = speed
 
-    def rotate(self, clockwise: bool):
-        if clockwise:
-            self.orientation = x if (x := self.orientation + 1) < 4 else 0
-        else:
-            self.orientation = x if (x := self.orientation - 1) >= 0 else 3
+    def rotate(self):
+            self.orientation = (self.orientation + 1) % len(self.shape)
 
     #return True if figure freezes and game needs to create new figure
     def move(self, delta: Point):

@@ -30,3 +30,4 @@ if __name__ == '__main__':
         window_surface.fill("black")  # "clearing screen" by filling it with one color
         render(game, window_surface) 
         pygame.display.flip()  # updating screen
+        #print(dt)
