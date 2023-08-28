@@ -13,8 +13,8 @@ def renderField(field: Field, window_surface):
             if(field.cells[i][j].is_active):
                 pygame.draw.rect(window_surface, field.cells[i][j].color, r, 0)
 
-            #color = (100, 100, 100)
-            #pygame.draw.rect(window_surface, color, r, 2)
+            color = (100, 100, 100)
+            pygame.draw.rect(window_surface, color, r, 2)
 
 
 def renderFigure(figure: Figure, window_surface):

@@ -48,7 +48,7 @@ class Game:
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 delta = Point(0, 0)
                 orientation = (self.figure.orientation + 1) % len(self.figure.shape)
-                if not self.check_vert_collision(delta, orientation) and not self.check_vert_collision(delta, orientation):
+                if not self.check_hor_collision(delta, orientation) and not self.check_vert_collision(delta, orientation):
                     self.figure.rotate()
 
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
