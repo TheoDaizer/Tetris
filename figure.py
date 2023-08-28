@@ -17,6 +17,11 @@ class Figure:
         self.color = color
         self.speed = speed
 
+    @property
+    def shape_position(self):
+        shape = self.shape[self.orientation]
+        return [Point(self.position.x + pt.x, self.position.y + pt.y) for pt in shape]
+
     def rotate(self):
             self.orientation = (self.orientation + 1) % len(self.shape)
 

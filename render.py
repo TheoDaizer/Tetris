@@ -19,11 +19,11 @@ def renderField(field: Field, window_surface):
 
 def renderFigure(figure: Figure, window_surface):
     """Rendering figure with filled rectangles of figure's color"""
-    oriented_shape = figure.shape[figure.orientation]
-    for i in range(len(figure.shape)):
+    #oriented_shape = figure.shape[figure.orientation]
+    for pt in figure.shape_position:
         r = pygame.Rect(
-            (int(figure.position.x) + oriented_shape[i].x) * TILESIZE, 
-            (int(figure.position.y) + oriented_shape[i].y) * TILESIZE, 
+            int(pt.x) * TILESIZE, 
+            int(pt.y) * TILESIZE, 
             TILESIZE, 
             TILESIZE
             )
