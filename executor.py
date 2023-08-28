@@ -2,16 +2,19 @@ import pygame
 import sys
 
 from constants import *
-import game
-from render import render
+from game import Game
+from renderer import Renderer
 
 if __name__ == '__main__':
 
     pygame.init()
     clock = pygame.time.Clock()
 
-    window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    game = game.Game()
+    game_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    tetris_game = Game()
+
+    game_renderer = Renderer(tetris_game, game_surface)
+    game_renderer.renderBackGround();
 
     clock.tick()  # time restart
     while True:
@@ -23,11 +26,10 @@ if __name__ == '__main__':
                 sys.exit()
 
             if user_input.type == pygame.KEYDOWN or user_input.type == pygame.KEYUP:
-                game.keyboard_input(user_input)
+                tetris_game.keyboard_input(user_input)
        
-        game.update(dt)
+        tetris_game.update(dt)
 
-        window_surface.fill("black")  # "clearing screen" by filling it with one color
-        render(game, window_surface) 
+        game_renderer.render() 
         pygame.display.flip()  # updating screen
         #print(dt)

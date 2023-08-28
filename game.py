@@ -57,8 +57,9 @@ class Game:
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.figure.speed = FALLINGSPEED
-
+    
     def freeze_figure(self):
+        """Creates new figure, updates the field state with previous "freezed" figure"""
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position;
             self.field.cells[int(pos.x)][int(pos.y)].is_active = True
@@ -68,8 +69,8 @@ class Game:
         index_color = rnd.randrange(len(all_colors))
         self.figure = Figure(all_shapes[index_shape], Point(4, 0), all_colors[index_color])
 
-    # check for horizontal collision. if there is a collision, the figure doesnt move
     def check_hor_collision(self, delta: Point, orientation: int):
+        """Check for horizontal collision. if there is a collision, the figure doesnt move"""
         if(delta.y > 1):
             delta.y = 1
 
@@ -80,8 +81,8 @@ class Game:
                 return True
         return False
 
-    # check for vert collision. if there is a collision, new figure creates and fiels state updates
     def check_vert_collision(self, delta: Point, orientation: int):
+        """Check for vert collision. if there is a collision, new figure creates and fiels state updates"""
         if(delta.y > 1):
             delta.y = 1
 

@@ -25,7 +25,6 @@ class Figure:
     def rotate(self):
             self.orientation = (self.orientation + 1) % len(self.shape)
 
-    #return True if figure freezes and game needs to create new figure
     def move(self, delta: Point):
         if(delta.y > 1):
             delta.y = 1
