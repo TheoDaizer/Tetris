@@ -18,12 +18,12 @@ class Renderer:
 
     def render_field(self, field: Field):
         """Rendering game grid with no fill rectangles"""
-        for i in range(len(field.cells)):
-            for j in range(len(field.cells[i])):
+        for i in range(len(field.nodes)):
+            for j in range(len(field.nodes[i])):
                 r = pygame.Rect(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE)
                 
-                if(field.cells[i][j].is_active):
-                    pygame.draw.rect(self.game_surface, field.cells[i][j].color, r, 0)
+                if(field.nodes[i][j].is_active):
+                    pygame.draw.rect(self.game_surface, field.nodes[i][j].color, r, 0)
     
 
     
