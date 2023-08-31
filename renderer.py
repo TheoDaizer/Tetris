@@ -12,11 +12,11 @@ class Renderer:
 
     def render(self):
         """Main rendering function, that call other renderers"""
-        self.renderFigure(self.game.figure)
-        self.renderField(self.game.field)
-        self.renderBackGround()
+        self.render_figure(self.game.figure)
+        self.render_field(self.game.field)
+        self.render_background()
 
-    def renderField(self, field: Field):
+    def render_field(self, field: Field):
         """Rendering game grid with no fill rectangles"""
         for i in range(len(field.cells)):
             for j in range(len(field.cells[i])):
@@ -27,7 +27,7 @@ class Renderer:
     
 
     
-    def renderFigure(self, figure: Figure):
+    def render_figure(self, figure: Figure):
         """Rendering figure with filled rectangles of figure's color"""
         self.game_surface.fill("black")  # "clearing screen" by filling it with one color
         for pt in figure.shape_position:
@@ -39,5 +39,5 @@ class Renderer:
                 )
             pygame.draw.rect(self.game_surface, figure.color, r, 0)
     
-    def renderBackGround(self):
+    def render_background(self):
         self.game_surface.blit(self.bg_image, (0, 0))
