@@ -35,10 +35,10 @@ class Renderer:
         self.figure_surface.blit(self.field_surface, (0, 0))
 
         figure = self.game.figure
-        for x, y in figure.shape_position:
+        for pt in figure.shape_position:
             r = pygame.Rect(
-                int(x) * TILESIZE,
-                int(y) * TILESIZE,
+                int(pt.x) * TILESIZE,
+                int(pt.y) * TILESIZE,
                 TILESIZE,
                 TILESIZE
                 )
