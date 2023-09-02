@@ -29,6 +29,6 @@ if __name__ == '__main__':
        
         tetris_game.update(dt)
 
-        game_renderer.render() 
+        game_renderer.render()
         pygame.display.flip()  # updating screen
-        # print(dt)
+        print(dt)

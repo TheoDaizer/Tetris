@@ -5,13 +5,13 @@ from figures import *
 from constants import FALLINGSPEED
 from colors import *
 
-all_shapes = (line_form, l_form_l, l_form_r, t_form, z_form_l, z_form_r, square_form)
-
-all_colors = (RED, GREEN, BLUE, YELLOW, PINK, LIGHT_BLUE)
-
 
 class Figure:
     """Class represents playing figures"""
+    tuple_shapes = (line_form, l_form_l, l_form_r, t_form, z_form_l, z_form_r, square_form)
+
+    all_shapes = [[[Point(pt[0], pt[1]) for pt in var] for var in shape] for shape in tuple_shapes]
+    all_colors = (RED, GREEN, BLUE, YELLOW, PINK, LIGHT_BLUE)
 
     def __init__(self, default_position: Point, default_orientation: int = 0, default_speed: int = FALLINGSPEED):
         self.default_position = default_position
@@ -41,12 +41,9 @@ class Figure:
         self.position = self.position + delta
 
     def refresh(self):
-        index_shape = rnd.randrange(len(all_shapes))
-        index_color = rnd.randrange(len(all_colors))
-
         self.position = self.default_position
         self.orientation = self.default_orientation
         self.speed = self.default_speed
 
-        self.shape = [[Point(pt[0], pt[1]) for pt in a] for a in all_shapes[index_shape]]
-        self.color = all_colors[index_color]
+        self.shape = rnd.choice(self.all_shapes)
+        self.color = rnd.choice(self.all_colors)
