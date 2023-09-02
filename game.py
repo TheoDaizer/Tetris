@@ -84,6 +84,9 @@ class Game:
         self.figure = Figure(default_position=Point(4, 0))
         self._field_updated = False
 
+        self.key_left = False
+        self.key_right = False
+
     def field_updated(self):
         if self._field_updated:
             self._field_updated = False
@@ -91,7 +94,13 @@ class Game:
         return False
 
     def update(self, dt: int):
-        delta = Point(0, dt * self.figure.speed)
+        dx = (self.key_right - self.key_left) * dt * self.figure.speed * 20
+
+        if dx != 0 and not (self.check_hor_collision(Point(dx, 0), self.figure.orientation)):
+            delta = Point(dx, dt * self.figure.speed)
+        else:
+            delta = Point(0, dt * self.figure.speed)
+
         if self.check_vert_collision(delta, self.figure.orientation):
             self.freeze_figure()
         else:
@@ -101,13 +110,9 @@ class Game:
         if event.type == pygame.KEYDOWN:
 
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                delta = Point(-1, 0)
-                if not (self.check_hor_collision(delta, self.figure.orientation)):
-                    self.figure.move(delta)
+                self.key_left = True
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                delta = Point(1, 0)
-                if not (self.check_hor_collision(delta, self.figure.orientation)):
-                    self.figure.move(delta)
+                self.key_right = True
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 delta = Point(0, 0)
                 orientation = (self.figure.orientation + 1) % len(self.figure.shape)
@@ -120,6 +125,10 @@ class Game:
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.figure.speed = FALLINGSPEED
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                self.key_left = False
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                self.key_right = False
     
     def freeze_figure(self):
         """Update the field state with current shape and refresh figure."""
