@@ -31,4 +31,4 @@ if __name__ == '__main__':
 
         game_renderer.render()
         pygame.display.flip()  # updating screen
-        print(dt)
+        # print(dt)

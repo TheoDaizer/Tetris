@@ -8,7 +8,7 @@ from colors import *
 
 class Figure:
     """Class represents playing figures"""
-    tuple_shapes = (line_form, l_form_l, l_form_r, t_form, z_form_l, z_form_r, square_form)
+    tuple_shapes = (I_FORM, J_FORM, L_FORM, T_FORM, Z_FORM, S_FORM, O_FORM)
 
     all_shapes = [[[Point(pt[0], pt[1]) for pt in var] for var in shape] for shape in tuple_shapes]
     all_colors = (RED, GREEN, BLUE, YELLOW, PINK, LIGHT_BLUE)
