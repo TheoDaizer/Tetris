@@ -11,18 +11,19 @@ class Node:
     color = None
 
     def __repr__(self):
-        return ('-', '+')[self.is_active]
+        return ('-', '+')[self.color is not None]
 
     def __init__(self):
-        self.is_active = False
         self.color = Node.color
+
+    @property
+    def is_active(self):
+        return self.color is not None
 
     def clean(self):
-        self.is_active = False
         self.color = Node.color
 
-    def update(self, color, is_active=True):
-        self.is_active = is_active
+    def update(self, color):
         self.color = color
 
 
