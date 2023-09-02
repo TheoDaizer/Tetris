@@ -21,6 +21,10 @@ class Node:
         self.is_active = False
         self.color = Node.color
 
+    def update(self, color, is_active=True):
+        self.is_active = is_active
+        self.color = color
+
 
 class Field:
     """Class represents playing field.
@@ -35,28 +39,41 @@ class Field:
         self.height = height
 
         self.nodes = [[Node() for _ in range(width)] for _ in range(height)]
+        self.rows_counter = [0] * height
 
-    def update(self):
-        """Update playing field nodes' state."""
-        for y in range(self.height):
-            is_full_line = True
+    def update(self, shape, color):
+        print("----------------")
+        for pt in shape:
+            x, y = int(pt.x), int(pt.y)
 
-            for x in range(self.width):
-                if not self.nodes[y][x].is_active:
-                    is_full_line = False
-                    break
+            self.nodes[y][x].update(color)
+            self.rows_counter[y] += 1
 
-            if is_full_line:
-                self.remove_row(y)
+            print("(" + str(x) + "," + str(y) + ") freezed")
 
-    def clean_row(self, row_n: int):
-        for node in self.nodes[row_n]:
-            node.clean()
+        # print(*self.field.nodes, sep='\n')
+        return self.check_row()
+
+    def check_row(self) -> int:
+        burned_rows = 0
+        for row_n in range(self.height):
+            if self.rows_counter[row_n] == self.width:
+                burned_rows += 1
+                self.rows_counter[row_n] = 0
+                self.remove_row(row_n)
+        return burned_rows
 
     def remove_row(self, row_n: int):
         self.clean_row(row_n)
         clean_row = self.nodes.pop(row_n)
         self.nodes = [clean_row] + self.nodes
+
+        self.rows_counter.pop(row_n)
+        self.rows_counter = [0] + self.rows_counter
+
+    def clean_row(self, row_n: int):
+        for node in self.nodes[row_n]:
+            node.clean()
 
 
 class Game:
@@ -76,8 +93,6 @@ class Game:
         delta = Point(0, dt * self.figure.speed)
         if self.check_vert_collision(delta, self.figure.orientation):
             self.freeze_figure()
-            self.field.update()
-            self._field_updated = True
         else:
             self.figure.move(delta)
 
@@ -106,16 +121,11 @@ class Game:
                 self.figure.speed = FALLINGSPEED
     
     def freeze_figure(self):
-        """Creates new figure, updates the field state with previous "freezed" figure"""
-        print("----------------")
-        for pt in self.figure.shape[self.figure.orientation]:
-            pos = pt + self.figure.position
-            self.field.nodes[int(pos.y)][int(pos.x)].is_active = True
-            self.field.nodes[int(pos.y)][int(pos.x)].color = self.figure.color
-            print("(" + str(int(pos.x)) + "," + str(int(pos.y)) + ") freezed")
-
-        # print(*self.field.nodes, sep='\n')
+        """Update the field state with current shape and refresh figure."""
+        burned_rows = self.field.update(self.figure.shape_position, self.figure.color)
+        print('Burned rows: ', burned_rows)
         self.figure.refresh()
+        self._field_updated = True
 
     def check_hor_collision(self, delta: Point, orientation: int):
         """Check for horizontal collision. if there is a collision, the figure doesn't move"""
