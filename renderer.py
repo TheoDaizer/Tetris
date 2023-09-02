@@ -25,21 +25,20 @@ class Renderer:
         self.field_surface.fill("black")  # "clearing screen" by filling it with one color
 
         field = self.game.field
-        for y in range(field.height):
-            for x in range(field.width):
-                if field.nodes[y][x].is_active:
-                    r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
-                    pygame.draw.rect(self.field_surface, field.nodes[y][x].color, r, 0)
+        for x, y in ((x, y) for y in range(field.height) for x in range(field.width)):
+            if field.nodes[y][x].is_active:
+                r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
+                pygame.draw.rect(self.field_surface, field.nodes[y][x].color, r, 0)
 
     def render_figure(self):
         """Rendering figure with filled rectangles of figure's color"""
         self.figure_surface.blit(self.field_surface, (0, 0))
 
         figure = self.game.figure
-        for pt in figure.shape_position:
+        for x, y in figure.shape_position:
             r = pygame.Rect(
-                int(pt.x) * TILESIZE,
-                int(pt.y) * TILESIZE,
+                int(x) * TILESIZE,
+                int(y) * TILESIZE,
                 TILESIZE,
                 TILESIZE
                 )
