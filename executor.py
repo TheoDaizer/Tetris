@@ -10,11 +10,10 @@ if __name__ == '__main__':
     pygame.init()
     clock = pygame.time.Clock()
 
-    game_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    game_screen = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     tetris_game = Game()
 
-    game_renderer = Renderer(tetris_game, game_surface)
-    # game_renderer.renderBackGround();
+    game_renderer = Renderer(tetris_game, game_screen)
 
     clock.tick()  # time restart
     while True:

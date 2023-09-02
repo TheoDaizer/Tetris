@@ -1,17 +1,14 @@
 import pygame
-import random as rnd
-from copy import deepcopy
 
-from constants import FALLINGSPEED, FASTFALLINGSPEED, WINDOWHEIGHT, WINDOWWIDTH, GRIDWIDTH, GRIDHEIGHT
+from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT
 
 from point import Point
-from figure import Figure, all_shapes, all_colors
-from colors import BLACK, RED
+from figure import Figure
 
 
 class Node:
     """Game field base object."""
-    color = BLACK
+    color = None
 
     def __repr__(self):
         return ('-', '+')[self.is_active]
@@ -38,15 +35,6 @@ class Field:
         self.height = height
 
         self.nodes = [[Node() for _ in range(width)] for _ in range(height)]
-        # for x in range(1,10):
-        #    for y in range(6,20):
-        #        self.nodes[x][y] = Node(True, RED)
-        # self.nodes[9][6] = Node(False)
-        # self.nodes[4][5] = Node(True, RED)
-        # self.nodes[5][5] = Node(True, RED)
-        # self.nodes[6][5] = Node(True, RED)
-        # self.nodes[7][5] = Node(True, RED)
-        # self.nodes[8][5] = Node(True, RED)
 
     def update(self):
         """Update playing field nodes' state."""
@@ -73,19 +61,23 @@ class Field:
 
 class Game:
     """Class that contains all essential game elements"""
-
     def __init__(self):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
+        self.figure = Figure(default_position=Point(4, 0))
+        self._field_updated = False
 
-        index_shape = rnd.randrange(len(all_shapes))
-        index_color = rnd.randrange(len(all_colors))
-        self.figure = Figure(all_shapes[index_shape], Point(4, 0), all_colors[index_color])
+    def field_updated(self):
+        if self._field_updated:
+            self._field_updated = False
+            return True
+        return False
 
     def update(self, dt: int):
         delta = Point(0, dt * self.figure.speed)
         if self.check_vert_collision(delta, self.figure.orientation):
             self.freeze_figure()
             self.field.update()
+            self._field_updated = True
         else:
             self.figure.move(delta)
 
@@ -123,13 +115,10 @@ class Game:
             print("(" + str(int(pos.x)) + "," + str(int(pos.y)) + ") freezed")
 
         # print(*self.field.nodes, sep='\n')
-
-        index_shape = rnd.randrange(len(all_shapes))
-        index_color = rnd.randrange(len(all_colors))
-        self.figure = Figure(all_shapes[index_shape], Point(4, 0), all_colors[index_color])
+        self.figure.refresh()
 
     def check_hor_collision(self, delta: Point, orientation: int):
-        """Check for horizontal collision. if there is a collision, the figure doesnt move"""
+        """Check for horizontal collision. if there is a collision, the figure doesn't move"""
         if delta.y > 1:
             delta.y = 1
 
