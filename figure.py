@@ -7,6 +7,7 @@ all_shapes = (line_form, l_form_l, l_form_r, t_form, z_form_l, z_form_r, square_
 
 all_colors = (RED, GREEN, BLUE, YELLOW, PINK, LIGHT_BLUE)
 
+
 class Figure:
     """Class represents playing figures"""
 
@@ -23,10 +24,10 @@ class Figure:
         return [Point(self.position.x + pt.x, self.position.y + pt.y) for pt in shape]
 
     def rotate(self):
-            self.orientation = (self.orientation + 1) % len(self.shape)
+        self.orientation = (self.orientation + 1) % len(self.shape)
 
     def move(self, delta: Point):
-        if(delta.y > 1):
+        if delta.y > 1:
             delta.y = 1
 
         self.position = self.position + delta

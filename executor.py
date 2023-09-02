@@ -14,7 +14,7 @@ if __name__ == '__main__':
     tetris_game = Game()
 
     game_renderer = Renderer(tetris_game, game_surface)
-    #game_renderer.renderBackGround();
+    # game_renderer.renderBackGround();
 
     clock.tick()  # time restart
     while True:
@@ -32,4 +32,4 @@ if __name__ == '__main__':
 
         game_renderer.render() 
         pygame.display.flip()  # updating screen
-        #print(dt)
+        # print(dt)
