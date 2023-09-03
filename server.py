@@ -1,8 +1,11 @@
 import socket
 from _thread import start_new_thread
-import sys
+import pickle
 
-server = '192.168.56.1'
+from game import Game
+from constants import IPV4
+
+server = IPV4
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -15,23 +18,30 @@ except socket.error as e:
 s.listen(2)
 print('Waiting for connection, Server Started')
 
+games = [Game(), Game()]
 
-def threaded_client(conn):
-    conn.send(str.encode('Connected'))
-    reply = ''
+
+def threaded_client(conn, player):
+    conn.send(pickle.dumps(games[player]))
+
     while True:
         try:
-            data = conn.recv(2048)
-            reply = data.decode('utf-8')
+            data = pickle.loads(conn.recv(4096))
+            games[player] = data
 
             if not data:
                 print("Disconnected")
                 break
             else:
-                print('Received: ', reply)
+                if player == 0:
+                    reply = games[1]
+                else:
+                    reply = games[0]
+                print('Received: ', data)
                 print('Sending: ', reply)
 
-            conn.sendall(str.encode(reply))
+            conn.sendall(pickle.dumps(reply))
+        # TODO эескпт без типа ошибки - шляпа
         except:
             break
 
@@ -39,8 +49,11 @@ def threaded_client(conn):
     conn.close()
 
 
+currentPlayer = 0
+
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
 
-    start_new_thread(threaded_client, (conn,))
+    start_new_thread(threaded_client, (conn, currentPlayer))
+    currentPlayer += 1

@@ -82,7 +82,7 @@ class Game:
     def __init__(self):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
         self.figure = Figure(default_position=Point(4, 0))
-        self._field_updated = False
+        self.field_updated = False
 
         self.key_left = False
         self.key_right = False
@@ -90,13 +90,9 @@ class Game:
         self.slide_limit = FPS // 20
         self.slide_counter = 0
 
-    def field_updated(self):
-        if self._field_updated:
-            self._field_updated = False
-            return True
-        return False
-
     def update(self, dt: int):
+        self.field_updated = False
+
         dx = (self.key_right - self.key_left)
         self.slide_counter += self.key_right or self.key_left
         if (self.slide_counter == self.slide_limit and
@@ -150,7 +146,7 @@ class Game:
         burned_rows = self.field.update(self.figure.shape_position, self.figure.color)
         print('Burned rows: ', burned_rows)
         self.figure.refresh()
-        self._field_updated = True
+        self.field_updated = True
 
     def check_hor_collision(self, delta: Point, orientation: int):
         """Check for horizontal collision. if there is a collision, the figure doesn't move"""
