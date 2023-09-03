@@ -1,6 +1,6 @@
 import pygame
 
-from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT
+from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT, FPS
 
 from point import Point
 from figure import Figure
@@ -87,6 +87,9 @@ class Game:
         self.key_left = False
         self.key_right = False
 
+        self.slide_limit = FPS // 20
+        self.slide_counter = 0
+
     def field_updated(self):
         if self._field_updated:
             self._field_updated = False
@@ -94,9 +97,11 @@ class Game:
         return False
 
     def update(self, dt: int):
-        dx = (self.key_right - self.key_left) * dt * self.figure.speed * 20
-
-        if dx != 0 and not (self.check_hor_collision(Point(dx, 0), self.figure.orientation)):
+        dx = (self.key_right - self.key_left)
+        self.slide_counter += self.key_right or self.key_left
+        if (self.slide_counter == self.slide_limit and
+                not (self.check_hor_collision(Point(dx, 0), self.figure.orientation))):
+            self.slide_counter = 0
             delta = Point(dx, dt * self.figure.speed)
         else:
             delta = Point(0, dt * self.figure.speed)
@@ -111,8 +116,16 @@ class Game:
 
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 self.key_left = True
+                self.slide_counter = - FPS // 8
+                delta = Point(-1, 0)
+                if not (self.check_hor_collision(delta, self.figure.orientation)):
+                    self.figure.move(delta)
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 self.key_right = True
+                self.slide_counter = - FPS // 8
+                delta = Point(1, 0)
+                if not (self.check_hor_collision(delta, self.figure.orientation)):
+                    self.figure.move(delta)
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 delta = Point(0, 0)
                 orientation = (self.figure.orientation + 1) % len(self.figure.shape)
@@ -127,8 +140,10 @@ class Game:
                 self.figure.speed = FALLINGSPEED
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 self.key_left = False
+                self.slide_counter = 0
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 self.key_right = False
+                self.slide_counter = 0
     
     def freeze_figure(self):
         """Update the field state with current shape and refresh figure."""
