@@ -1,6 +1,7 @@
 import socket
 import pickle
-
+from typing import Optional
+from game import Game
 from constants import IPV4
 
 
@@ -18,9 +19,8 @@ class Network:
     def connect(self):
         try:
             self.client.connect(self.addr)
-            x = pickle.loads(self.client.recv(4096))
-            print(x)
-            return x
+            return pickle.loads(self.client.recv(4096))
+
         # TODO эескпт без типа ошибки - шляпа
         except:
             pass
@@ -28,6 +28,13 @@ class Network:
     def send(self, data):
         try:
             self.client.send(pickle.dumps(data))
-            return pickle.loads(self.client.recv(4096))
+            return pickle.loads(self.client.recv(1024))
         except socket.error as e:
             print(e)
+
+
+class NetworkContainer:
+    def __init__(self, game: Game):
+        self.figure = game.figure.shape_position
+        self.figure_color = game.figure.color
+        self.field = game.field.nodes  # if game.field_updated else None

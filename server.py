@@ -18,25 +18,25 @@ except socket.error as e:
 s.listen(2)
 print('Waiting for connection, Server Started')
 
-games = [Game(), Game()]
+containers = [None, None]
 
 
 def threaded_client(conn, player):
-    conn.send(pickle.dumps(games[player]))
+    conn.sendall(pickle.dumps(Game()))
 
     while True:
         try:
-            data = pickle.loads(conn.recv(4096))
-            games[player] = data
+            data = pickle.loads(conn.recv(1024))
+            containers[player] = data
 
             if not data:
                 print("Disconnected")
                 break
             else:
                 if player == 0:
-                    reply = games[1]
+                    reply = containers[1]
                 else:
-                    reply = games[0]
+                    reply = containers[0]
                 print('Received: ', data)
                 print('Sending: ', reply)
 

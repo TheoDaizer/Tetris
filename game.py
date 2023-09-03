@@ -39,7 +39,7 @@ class Field:
         self.width = width
         self.height = height
 
-        self.nodes = [[Node() for _ in range(width)] for _ in range(height)]
+        self.nodes = [[None for _ in range(width)] for _ in range(height)]
         self.rows_counter = [0] * height
 
     def update(self, shape, color):
@@ -47,7 +47,7 @@ class Field:
         for pt in shape:
             x, y = int(pt.x), int(pt.y)
 
-            self.nodes[y][x].update(color)
+            self.nodes[y][x] = color
             self.rows_counter[y] += 1
 
             print("(" + str(x) + "," + str(y) + ") freezed")
@@ -73,8 +73,8 @@ class Field:
         self.rows_counter = [0] + self.rows_counter
 
     def clean_row(self, row_n: int):
-        for node in self.nodes[row_n]:
-            node.clean()
+        for i in range(self.width):
+            self.nodes[row_n][i] = None
 
 
 class Game:
@@ -157,7 +157,7 @@ class Game:
         for pt in self.figure.shape[orientation]:
             point_position = new_position + pt
             if (not (0 <= point_position.x < GRIDWIDTH) or
-                    self.field.nodes[int(point_position.y)][int(point_position.x)].is_active):
+                    self.field.nodes[int(point_position.y)][int(point_position.x)] is not None):
                 return True
         return False
 
@@ -170,6 +170,6 @@ class Game:
         for pt in self.figure.shape[orientation]:
             point_position = new_position + pt
             if (not (0 <= point_position.y < GRIDHEIGHT) or
-                    self.field.nodes[int(point_position.y)][int(point_position.x)].is_active):
+                    self.field.nodes[int(point_position.y)][int(point_position.x)] is not None):
                 return True
         return False

@@ -1,6 +1,6 @@
 ﻿import pygame
 from constants import TILESIZE
-from game import Game
+from network import NetworkContainer
 
 from constants import WINDOWWIDTH, WINDOWHEIGHT
 
@@ -16,15 +16,16 @@ class Renderer:
                                 ]
         self.grid_image = pygame.image.load("resources\\tetris_bg.png")
 
-    def render(self, game_1: Game, game_2: Game):
+    def render(self, game_1: NetworkContainer, game_2: NetworkContainer):
         """Main rendering function, that call other renderers"""
-        if game_1.field_updated:
+        if game_1.field is not None:
             self.render_field(game_1.field, 0)
-        if game_2.field_updated:
-            self.render_field(game_2.field, 1)
+        self.render_figure(game_1.figure, game_1.figure_color,  0)
 
-        self.render_figure(game_1.figure, 0)
-        self.render_figure(game_2.figure, 1)
+        if game_2:
+            if game_2.field is not None:
+                self.render_field(game_2.field, 1)
+            self.render_figure(game_2.figure, game_2.figure_color, 1)
 
         self.render_game_screen()
 
@@ -32,23 +33,23 @@ class Renderer:
         """Rendering game grid with no fill rectangles"""
         self.field_surfaces[game_n].fill("black")  # "clearing screen" by filling it with one color
 
-        for x, y in ((x, y) for y in range(field.height) for x in range(field.width)):
-            if field.nodes[y][x].is_active:
+        for x, y in ((x, y) for y in range(len(field)) for x in range(len(field[0]))):
+            if field[y][x] is not None:
                 r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
-                pygame.draw.rect(self.field_surfaces[game_n], field.nodes[y][x].color, r, 0)
+                pygame.draw.rect(self.field_surfaces[game_n], field[y][x], r, 0)
 
-    def render_figure(self, figure, game_n):
+    def render_figure(self, figure, figure_color, game_n):
         """Rendering figure with filled rectangles of figure's color"""
         self.figure_surfaces[game_n].blit(self.field_surfaces[game_n], (0, 0))
 
-        for pt in figure.shape_position:
+        for pt in figure:
             r = pygame.Rect(
                 int(pt.x) * TILESIZE,
                 int(pt.y) * TILESIZE,
                 TILESIZE,
                 TILESIZE
                 )
-            pygame.draw.rect(self.figure_surfaces[game_n], figure.color, r, 0)
+            pygame.draw.rect(self.figure_surfaces[game_n], figure_color, r, 0)
 
     def render_game_screen(self):
         self.game_screen.blit(self.figure_surfaces[0], (0, 0))
