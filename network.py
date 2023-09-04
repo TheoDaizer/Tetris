@@ -37,4 +37,7 @@ class NetworkContainer:
     def __init__(self, game: Game):
         self.figure = game.figure.shape_position
         self.figure_color = game.figure.color
-        self.field = game.field.nodes if game.field_updated else None
+        self.field = None
+        if game.field_updated:
+            self.field_updated = False
+            self.field = game.field.nodes

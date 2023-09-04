@@ -13,6 +13,6 @@ FALLINGSPEED = 0.001     # figure falling speed in plying field's cell per milli
 FASTFALLINGSPEED = 0.1  # accelerated figure falling speed (cell/ms)
 
 # Theodore
-IPV4 = '25.47.240.219'  # cmd> ipconfig
+# IPV4 = '25.47.240.219'  # cmd> ipconfig
 # Denis
-# IPV4 = '25.50.55.253'
+IPV4 = '25.50.55.253'

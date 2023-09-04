@@ -91,8 +91,6 @@ class Game:
         self.slide_counter = 0
 
     def update(self, dt: int):
-        self.field_updated = False
-
         dx = (self.key_right - self.key_left)
         self.slide_counter += self.key_right or self.key_left
         if (self.slide_counter == self.slide_limit and
