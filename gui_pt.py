@@ -116,53 +116,9 @@ class SurfaceInterface:
 
             pygame.display.update()
 
-    def buttons_initialisation(self):
 
-        button_size_x = window_width / 3
-        button_size_y = window_height / 8
 
-        button_pos_x = window_width / 2 - button_size_x / 2
-        button_pos_y = window_height / 2 - button_size_y / 2
-        button_pos_y1 = button_pos_y - window_height / 4
-        button_pos_y2 = button_pos_y - window_height / 8
-        button_pos_y3 = button_pos_y
-        button_pos_y4 = button_pos_y + window_height / 8
-        button_pos_y5 = button_pos_y + window_height / 4
 
-        confirm_start_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y), (button_size_x, button_size_y)),
-            text='Press Space to Start',
-            manager=manager,
-            visible=False
-            )
-
-        single_player_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y1), (button_size_x, button_size_y)),
-            text='Single Player',
-            manager=manager,
-            visible=False
-            )
-
-        multiplayer_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y2), (button_size_x, button_size_y)),
-            text='Multiplayer',
-            manager=manager,
-            visible=False
-            )
-
-        settings_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y3), (button_size_x, button_size_y)),
-            text='Settings',
-            manager=manager,
-            visible=False
-            )
-
-        exit_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y4), (button_size_x, button_size_y)),
-            text='Exit Tetris',
-            manager=manager,
-            visible=False
-            )
 
 if __name__ == '__main__':
 
@@ -183,8 +139,52 @@ if __name__ == '__main__':
     single_player = SinglePlayerMenu()
     tetris_game = game.Game()
 
+    button_size_x = window_width / 3
+    button_size_y = window_height / 8
 
+    button_pos_x = window_width / 2 - button_size_x / 2
+    button_pos_y = window_height / 2 - button_size_y / 2
+    button_pos_y1 = button_pos_y - window_height / 4
+    button_pos_y2 = button_pos_y - window_height / 8
+    button_pos_y3 = button_pos_y
+    button_pos_y4 = button_pos_y + window_height / 8
+    button_pos_y5 = button_pos_y + window_height / 4
+
+    confirm_start_button = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((button_pos_x, button_pos_y), (button_size_x, button_size_y)),
+        text='Press Space to Start',
+        manager=manager,
+        visible=False
+    )
+
+    single_player_button = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((button_pos_x, button_pos_y1), (button_size_x, button_size_y)),
+        text='Single Player',
+        manager=manager,
+        visible=False
+    )
+
+    multiplayer_button = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((button_pos_x, button_pos_y2), (button_size_x, button_size_y)),
+        text='Multiplayer',
+        manager=manager,
+        visible=False
+    )
+
+    settings_button = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((button_pos_x, button_pos_y3), (button_size_x, button_size_y)),
+        text='Settings',
+        manager=manager,
+        visible=False
+    )
+
+    exit_button = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((button_pos_x, button_pos_y4), (button_size_x, button_size_y)),
+        text='Exit Tetris',
+        manager=manager,
+        visible=False
+    )
 
     interface = SurfaceInterface()
-    interface.buttons_initialisation()
+
     interface.run()
