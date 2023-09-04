@@ -7,6 +7,8 @@ from network import Network, NetworkContainer
 
 if __name__ == '__main__':
     network = Network()
+    network_counter = FPS
+    player_2 = None
 
     pygame.init()
     clock = pygame.time.Clock()
@@ -31,8 +33,11 @@ if __name__ == '__main__':
         game.update(dt)
 
         player = NetworkContainer(game)
-        player_2 = network.send(player)
+        network_counter -= 1
+        if network_counter == 0:
+            network_counter = FPS
+            player_2 = network.send(player)
 
         game_renderer.render(player, player_2)
         pygame.display.flip()  # updating screen
-        # print(dt)
+        print(dt)

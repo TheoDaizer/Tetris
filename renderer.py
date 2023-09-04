@@ -14,7 +14,7 @@ class Renderer:
         self.figure_surfaces = [pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT)),
                                 pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
                                 ]
-        self.grid_image = pygame.image.load("resources\\tetris_bg.png")
+        self.grid_image = pygame.image.load("resources/tetris_bg.png")
 
     def render(self, game_1: NetworkContainer, game_2: NetworkContainer):
         """Main rendering function, that call other renderers"""

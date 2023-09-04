@@ -12,4 +12,7 @@ FPS = 60  # game speed is fixed to 60 frames per second
 FALLINGSPEED = 0.001     # figure falling speed in plying field's cell per millisecond (cell/ms)
 FASTFALLINGSPEED = 0.1  # accelerated figure falling speed (cell/ms)
 
-IPV4 = '192.168.0.21'  # cmd> ipconfig
+# Theodore
+IPV4 = '25.47.240.219'  # cmd> ipconfig
+# Denis
+# IPV4 = '25.50.55.253'
