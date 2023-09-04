@@ -13,10 +13,10 @@ if __name__ == '__main__':
     pygame.display.set_caption('PvP Tetris')
     clock = pygame.time.Clock()
 
-    window_surface = pygame.display.set_mode((800, 600), pygame.RESIZABLE)
-    background = pygame.Surface((800, 600))
+    window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), pygame.RESIZABLE)
+    background = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
     background.fill(pygame.Color('#000000'))
-    manager = pygame_gui.UIManager((800, 600))
+    manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
 
     confirm_start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 240), (300, 100)),
                                                         text='Press Space to Start',
@@ -60,10 +60,9 @@ if __name__ == '__main__':
 
         tetris_game = game.Game()
         running = True
-        clock.tick()  # time restart
 
-        game_part = pygame.surface.Surface((800, 400))
-        gui_part = pygame.surface.Surface((800, 200))
+        game_part = pygame.Surface((WINDOWWIDTH-200, WINDOWHEIGHT))
+        gui_part = pygame.Surface((200, WINDOWHEIGHT))
 
         while running:
             dt_frame = clock.tick(FPS)  # time from previous frame in milliseconds. argument provides fps limitation
@@ -78,10 +77,19 @@ if __name__ == '__main__':
                     if event.key == pygame.K_ESCAPE:
                         running = False
 
+                if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+                    tetris_game.keyboard_input(event)
+
             tetris_game.update(dt_frame)
 
-            window_surface.fill("black")  # "clearing screen" by filling it with one color
-            render(tetris_game, window_surface)
-            pygame.display.flip()  # updating screen
+            # noinspection PyUnresolvedReferences
+            game_part.fill("black")
+            render(tetris_game, game_part)
+            window_surface.blit(background, (0, 0))  # "clearing screen" by filling it with one color
+            window_surface.blit(game_part, (0, 0))
+            window_surface.blit(gui_part, (WINDOWWIDTH-200, 0))
+
+
+            pygame.display.update()  # updating screen
 
     starting_screen()
