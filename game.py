@@ -1,6 +1,6 @@
 import pygame
 
-from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT, FPS
+from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
 
 from point import Point
 from figure import Figure
@@ -81,7 +81,7 @@ class Game:
     """Class that contains all essential game elements"""
     def __init__(self):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
-        self.figure = Figure(default_position=Point(4, 0))
+        self.figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]))
         self.field_updated = False
 
         self.key_left = False
@@ -94,13 +94,13 @@ class Game:
         dx = (self.key_right - self.key_left)
         self.slide_counter += self.key_right or self.key_left
         if (self.slide_counter == self.slide_limit and
-                not (self.check_hor_collision(Point(dx, 0), self.figure.orientation))):
+                not (self.check_collision(Point(dx, 0), self.figure.orientation))):
             self.slide_counter = 0
             delta = Point(dx, dt * self.figure.speed)
         else:
             delta = Point(0, dt * self.figure.speed)
 
-        if self.check_vert_collision(delta, self.figure.orientation):
+        if self.check_collision(delta, self.figure.orientation):
             self.freeze_figure()
         else:
             self.figure.move(delta)
@@ -112,19 +112,21 @@ class Game:
                 self.key_left = True
                 self.slide_counter = - FPS // 8
                 delta = Point(-1, 0)
-                if not (self.check_hor_collision(delta, self.figure.orientation)):
+                if not (self.check_collision(delta, self.figure.orientation)):
                     self.figure.move(delta)
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 self.key_right = True
                 self.slide_counter = - FPS // 8
                 delta = Point(1, 0)
-                if not (self.check_hor_collision(delta, self.figure.orientation)):
+                if not (self.check_collision(delta, self.figure.orientation)):
                     self.figure.move(delta)
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 delta = Point(0, 0)
                 orientation = (self.figure.orientation + 1) % len(self.figure.shape)
-                if not self.check_hor_collision(delta, orientation) and not self.check_vert_collision(delta, orientation):
+                if not self.check_collision(delta, orientation) and not self.check_collision(delta, orientation):
                     self.figure.rotate()
+                else:
+                    self.find_new_place(orientation)
 
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.figure.speed = FASTFALLINGSPEED
@@ -146,28 +148,29 @@ class Game:
         self.figure.refresh()
         self.field_updated = True
 
-    def check_hor_collision(self, delta: Point, orientation: int):
+    def check_collision(self, delta: Point, orientation: int):
         """Check for horizontal collision. if there is a collision, the figure doesn't move"""
         if delta.y > 1:
             delta.y = 1
-
+        collided = False
         new_position = self.figure.position + delta
+        collided_points = []
         for pt in self.figure.shape[orientation]:
             point_position = new_position + pt
-            if (not (0 <= point_position.x < GRIDWIDTH) or
+            if (not (0 <= point_position.x < GRIDWIDTH) or 
+                not (0 <= point_position.y < GRIDHEIGHT) or
                     self.field.nodes[int(point_position.y)][int(point_position.x)] is not None):
-                return True
-        return False
+                print('Collided: ' + "(" + str(int(pt.x)) + "," + str(int(pt.y)) + ")")
+                collided = True
+                collided_points.append(pt)
 
-    def check_vert_collision(self, delta: Point, orientation: int):
-        """Check for vert collision. if there is a collision, new figure creates and fields state updates"""
-        if delta.y > 1:
-            delta.y = 1
+        #if collided:
+        #    abs_collided_x = [abs(ele) for ele in collided_x]
+        #    collision_len = collided_x[abs_collided_x.index(max(abs_collided_x))]
+        #    if collision_len < 0:
+        #        collision_len -= 1
 
-        new_position = self.figure.position + delta
-        for pt in self.figure.shape[orientation]:
-            point_position = new_position + pt
-            if (not (0 <= point_position.y < GRIDHEIGHT) or
-                    self.field.nodes[int(point_position.y)][int(point_position.x)] is not None):
-                return True
-        return False
+        return collided
+
+    def find_new_place(self, orientation: int):
+        pass
