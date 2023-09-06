@@ -45,5 +45,5 @@ class Figure:
         self.orientation = self.default_orientation
         self.speed = self.default_speed
 
-        self.shape = self.all_shapes[0]#rnd.choice(self.all_shapes)
+        self.shape = rnd.choice(self.all_shapes)
         self.color = rnd.choice(self.all_colors)
