@@ -1,3 +1,4 @@
+from turtle import position
 import pygame
 
 from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
@@ -121,12 +122,7 @@ class Game:
                 if not (self.check_collision(delta, self.figure.orientation)):
                     self.figure.move(delta)
             if event.key == pygame.K_UP or event.key == pygame.K_w:
-                delta = Point(0, 0)
-                orientation = (self.figure.orientation + 1) % len(self.figure.shape)
-                if not self.check_collision(delta, orientation) and not self.check_collision(delta, orientation):
-                    self.figure.rotate()
-                else:
-                    self.find_new_place(orientation)
+                self.rotation_handler()
 
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.figure.speed = FASTFALLINGSPEED
@@ -152,25 +148,33 @@ class Game:
         """Check for horizontal collision. if there is a collision, the figure doesn't move"""
         if delta.y > 1:
             delta.y = 1
-        collided = False
+
         new_position = self.figure.position + delta
-        collided_points = []
         for pt in self.figure.shape[orientation]:
             point_position = new_position + pt
             if (not (0 <= point_position.x < GRIDWIDTH) or 
                 not (0 <= point_position.y < GRIDHEIGHT) or
                     self.field.nodes[int(point_position.y)][int(point_position.x)] is not None):
-                print('Collided: ' + "(" + str(int(pt.x)) + "," + str(int(pt.y)) + ")")
-                collided = True
-                collided_points.append(pt)
+                #print('Collided: ' + "(" + str(int(pt.x)) + "," + str(int(pt.y)) + ")")
+                return True
 
-        #if collided:
-        #    abs_collided_x = [abs(ele) for ele in collided_x]
-        #    collision_len = collided_x[abs_collided_x.index(max(abs_collided_x))]
-        #    if collision_len < 0:
-        #        collision_len -= 1
+        return False
 
-        return collided
+    def rotation_handler(self,):
+        """If figure can rotate - rotates figure"""
+        orientation = (self.figure.orientation + 1) % len(self.figure.shape)
+        delta = Point(0, 0)
 
-    def find_new_place(self, orientation: int):
-        pass
+        for pt in self.figure.shape[orientation]:
+            point_position = self.figure.position + pt
+            if(point_position.y < 0):
+                delta += Point(0, 1)
+            if(point_position.x < 0):
+                delta += Point(1, 0)
+            if(point_position.x >= GRIDWIDTH):
+                delta += Point(-1, 0)
+
+        if not self.check_collision(delta, orientation):
+            self.figure.move(delta)
+            self.figure.rotate()
+        
