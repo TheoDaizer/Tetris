@@ -35,8 +35,6 @@ class Figure:
         self.orientation = (self.orientation + 1) % len(self.shape)
 
     def move(self, delta: Point):
-        if delta.y > 1:
-            delta.y = 1
 
         self.position = self.position + delta
 

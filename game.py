@@ -123,9 +123,10 @@ class Game:
                     self.figure.move(delta)
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 self.rotation_handler()
-
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.figure.speed = FASTFALLINGSPEED
+            if event.key == pygame.K_SPACE:
+                self.figure_drop()
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
@@ -152,8 +153,6 @@ class Game:
 
     def check_collision(self, delta: Point, orientation: int):
         """Check for horizontal collision. if there is a collision, the figure doesn't move"""
-        if delta.y > 1:
-            delta.y = 1
 
         new_position = self.figure.position + delta
         for pt in self.figure.shape[orientation]:
@@ -165,7 +164,7 @@ class Game:
 
         return False
 
-    def rotation_handler(self,):
+    def rotation_handler(self):
         """If figure can rotate - rotates figure"""
         orientation = (self.figure.orientation + 1) % len(self.figure.shape)
         delta = Point(0, 0)
@@ -182,4 +181,11 @@ class Game:
         if not self.check_collision(delta, orientation):
             self.figure.move(delta)
             self.figure.rotate()
-        
+       
+    def figure_drop(self):
+        for field_y in range(GRIDHEIGHT - 1, 0, -1):
+            delta = Point(0, field_y - self.figure.position.y)
+            if not self.check_collision(delta, self.figure.orientation):
+                self.figure.move(delta)
+                break
+        self.freeze_figure()
