@@ -1,7 +1,5 @@
-from asyncio.windows_events import NULL
 import pygame
 import sys
-from game import Game
 
 from constants import *
 from renderer import Renderer
@@ -18,14 +16,16 @@ if __name__ == '__main__':
     game_screen = pygame.display.set_mode((WINDOWWIDTH * 2, WINDOWHEIGHT))
     game = network.get_game()
 
-    if game == None:
-        game = Game()
 
     game_renderer = Renderer(game_screen)
 
     clock.tick()  # time restart
     while True:
         dt = clock.tick(FPS)  # time from previous frame in milliseconds. argument provides fps limitation
+
+        if game.game_over:
+            pygame.quit()
+            sys.exit()
 
         for user_input in pygame.event.get():
             if user_input.type == pygame.QUIT:
@@ -38,10 +38,10 @@ if __name__ == '__main__':
         game.update(dt)
 
         player = NetworkContainer(game)
-        #network_counter -= 1
-        #if network_counter == 0:
-        #    network_counter = FPS
-        #    player_2 = network.send(player)
+        network_counter -= 1
+        if network_counter == 0:
+            network_counter = FPS
+            player_2 = network.send(player)
 
         game_renderer.render(player, player_2)
         pygame.display.flip()  # updating screen

@@ -1,4 +1,3 @@
-from turtle import position
 import pygame
 
 from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
@@ -53,7 +52,6 @@ class Field:
 
             print("(" + str(x) + "," + str(y) + ") freezed")
 
-        # print(*self.field.nodes, sep='\n')
         return self.check_row()
 
     def check_row(self) -> int:
@@ -91,6 +89,8 @@ class Game:
         self.slide_limit = FPS // 20
         self.slide_counter = 0
 
+        self.game_over = False
+
     def update(self, dt: int):
         dx = (self.key_right - self.key_left)
         self.slide_counter += self.key_right or self.key_left
@@ -102,7 +102,7 @@ class Game:
             delta = Point(0, dt * self.figure.speed)
 
         if self.check_collision(delta, self.figure.orientation):
-            self.freeze_figure()
+            burned_rows = self.freeze_figure()
         else:
             self.figure.move(delta)
 
@@ -141,8 +141,14 @@ class Game:
         """Update the field state with current shape and refresh figure."""
         burned_rows = self.field.update(self.figure.shape_position, self.figure.color)
         print('Burned rows: ', burned_rows)
+        for pt in self.figure.shape[self.figure.orientation]:
+            pos = pt + self.figure.position
+            if pos.y == 0 and not burned_rows:
+                self.game_over = True
+                break
         self.figure.refresh()
         self.field_updated = True
+        return burned_rows
 
     def check_collision(self, delta: Point, orientation: int):
         """Check for horizontal collision. if there is a collision, the figure doesn't move"""
@@ -155,7 +161,6 @@ class Game:
             if (not (0 <= point_position.x < GRIDWIDTH) or 
                 not (0 <= point_position.y < GRIDHEIGHT) or
                     self.field.nodes[int(point_position.y)][int(point_position.x)] is not None):
-                #print('Collided: ' + "(" + str(int(pt.x)) + "," + str(int(pt.y)) + ")")
                 return True
 
         return False
