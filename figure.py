@@ -11,7 +11,7 @@ class Figure:
     tuple_shapes = (I_FORM, J_FORM, L_FORM, T_FORM, Z_FORM, S_FORM, O_FORM)
 
     all_shapes = [[[Point(pt[0], pt[1]) for pt in var] for var in shape] for shape in tuple_shapes]
-    all_colors = (RED, GREEN, BLUE, YELLOW, PINK, LIGHT_BLUE)
+    all_colors = (LIGHT_BLUE, BLUE, ORANGE, PINK, GREEN, RED, YELLOW )
 
     def __init__(self, default_position: Point, default_orientation: int = 0, default_speed: int = FALLINGSPEED):
         self.default_position = default_position
@@ -43,5 +43,6 @@ class Figure:
         self.orientation = self.default_orientation
         self.speed = self.default_speed
 
-        self.shape = rnd.choice(self.all_shapes)
-        self.color = rnd.choice(self.all_colors)
+        shape_var = rnd.randrange(len(self.all_shapes))
+        self.shape = self.all_shapes[shape_var]
+        self.color = self.all_colors[shape_var]

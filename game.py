@@ -183,9 +183,9 @@ class Game:
             self.figure.rotate()
        
     def figure_drop(self):
-        for field_y in range(GRIDHEIGHT - 1, 0, -1):
+        for field_y in range(int(self.figure.position.y) + 1, GRIDHEIGHT):
             delta = Point(0, field_y - self.figure.position.y)
-            if not self.check_collision(delta, self.figure.orientation):
-                self.figure.move(delta)
+            if self.check_collision(delta, self.figure.orientation):
+                self.figure.move(delta - Point(0, 1))
                 break
         self.freeze_figure()

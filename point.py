@@ -11,6 +11,9 @@ class Point:
     def __add__(self, point):
         return Point(self.x + point.x, self.y + point.y)
 
+    def __sub__ (self, point):
+        return Point(self.x - point.x, self.y - point.y)
+
     def __repr__(self):
         return f'x:{self.x} y:{self.y}'
 
