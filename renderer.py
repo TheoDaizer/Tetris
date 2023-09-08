@@ -25,12 +25,12 @@ class Renderer:
         """Main rendering function, that call other renderers"""
         if game_1.field is not None:
             self.render_field(game_1.field, 0)
-        self.render_figure(game_1.figure, game_1.figure_color,  0)
+        self.render_figure(game_1.figure, game_1.figure_shadow, game_1.figure_color,  0)
 
         if game_2:
             if game_2.field is not None:
                 self.render_field(game_2.field, 1)
-            self.render_figure(game_2.figure, game_2.figure_color, 1)
+            self.render_figure(game_2.figure, game_1.figure_shadow, game_2.figure_color, 1)
 
         self.render_game_screen()
 
@@ -43,17 +43,20 @@ class Renderer:
                 r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
                 pygame.draw.rect(self.field_surfaces[game_n], field[y][x], r, 0)
 
-    def render_figure(self, figure, figure_color, game_n):
+    def render_figure(self, figure, shadow, figure_color, game_n):
         """Rendering figure with filled rectangles of figure's color"""
         self.figure_surfaces[game_n].blit(self.field_surfaces[game_n], (0, 0))
 
+        for pt in shadow:
+            r = pygame.Rect(
+                int(pt.x) * TILESIZE + 1, int(pt.y) * TILESIZE + 1,
+                TILESIZE - 2, TILESIZE - 2)
+            pygame.draw.rect(self.figure_surfaces[game_n], (200, 200, 200), r, 2)
+
         for pt in figure:
             r = pygame.Rect(
-                int(pt.x) * TILESIZE,
-                int(pt.y) * TILESIZE,
-                TILESIZE,
-                TILESIZE
-                )
+                int(pt.x) * TILESIZE, int(pt.y) * TILESIZE,
+                TILESIZE, TILESIZE)
             pygame.draw.rect(self.figure_surfaces[game_n], figure_color, r, 0)
 
     def render_game_screen(self):

@@ -36,6 +36,7 @@ class Network:
 class NetworkContainer:
     def __init__(self, game: Game):
         self.figure = game.figure.shape_position
+        self.figure_shadow = game.figure.shadow_shape_position
         self.figure_color = game.figure.color
         self.field = None
         if game.field_updated:

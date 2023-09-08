@@ -2,7 +2,7 @@ import random as rnd
 
 from point import Point
 from figures import *
-from constants import FALLINGSPEED
+from constants import FALLINGSPEED, GRIDHEIGHT
 from colors import *
 
 
@@ -17,9 +17,11 @@ class Figure:
         self.default_position = default_position
         self.default_orientation = default_orientation
         self.default_speed = default_speed
+        self.default_shadow_position = Point(self.default_position.x, GRIDHEIGHT - 1)
 
         self.position = None
         self.orientation = None
+        self.shadow_position = None
         self.speed = None
         self.color = None
         self.shape = None
@@ -31,15 +33,20 @@ class Figure:
         shape = self.shape[self.orientation]
         return [Point(self.position.x + pt.x, self.position.y + pt.y) for pt in shape]
 
+    @property
+    def shadow_shape_position(self):
+        shape = self.shape[self.orientation]
+        return [Point(self.shadow_position.x + pt.x, self.shadow_position.y + pt.y) for pt in shape]
+
     def rotate(self):
         self.orientation = (self.orientation + 1) % len(self.shape)
 
     def move(self, delta: Point):
-
         self.position = self.position + delta
 
     def refresh(self):
         self.position = self.default_position
+        self.shadow_position = self.default_shadow_position
         self.orientation = self.default_orientation
         self.speed = self.default_speed
 

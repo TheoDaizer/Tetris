@@ -105,6 +105,7 @@ class Game:
             burned_rows = self.freeze_figure()
         else:
             self.figure.move(delta)
+            self.update_shadow()
 
     def keyboard_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -115,12 +116,14 @@ class Game:
                 delta = Point(-1, 0)
                 if not (self.check_collision(delta, self.figure.orientation)):
                     self.figure.move(delta)
+                    self.update_shadow()
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 self.key_right = True
                 self.slide_counter = - FPS // 8
                 delta = Point(1, 0)
                 if not (self.check_collision(delta, self.figure.orientation)):
                     self.figure.move(delta)
+                    self.update_shadow()
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 self.rotation_handler()
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
@@ -183,9 +186,12 @@ class Game:
             self.figure.rotate()
        
     def figure_drop(self):
+        self.figure.move(Point(0, self.figure.shadow_position.y - self.figure.position.y))
+        self.freeze_figure()
+
+    def update_shadow(self):
         for field_y in range(int(self.figure.position.y) + 1, GRIDHEIGHT):
             delta = Point(0, field_y - self.figure.position.y)
             if self.check_collision(delta, self.figure.orientation):
-                self.figure.move(delta - Point(0, 1))
+                self.figure.shadow_position = Point(self.figure.position.x, field_y - 1)
                 break
-        self.freeze_figure()
