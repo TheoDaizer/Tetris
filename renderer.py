@@ -2,7 +2,7 @@
 from constants import TILESIZE
 from network import NetworkContainer
 
-from constants import WINDOWWIDTH, WINDOWHEIGHT
+from constants import WINDOWWIDTH, WINDOWHEIGHT, GRIDHEIGHT, GRIDWIDTH
 
 
 class Renderer:
@@ -14,7 +14,12 @@ class Renderer:
         self.figure_surfaces = [pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT)),
                                 pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
                                 ]
-        self.grid_image = pygame.image.load("resources/tetris_bg.png")
+        self.background_surface = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT), pygame.SRCALPHA)
+
+        self.background_surface.fill((0, 0, 0, 0))
+        for x, y in ((x, y) for y in range(GRIDHEIGHT) for x in range(GRIDWIDTH)):
+                r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
+                pygame.draw.rect(self.background_surface, (100, 100, 100), r, 1)
 
     def render(self, game_1: NetworkContainer, game_2: NetworkContainer):
         """Main rendering function, that call other renderers"""
@@ -52,8 +57,9 @@ class Renderer:
             pygame.draw.rect(self.figure_surfaces[game_n], figure_color, r, 0)
 
     def render_game_screen(self):
+
         self.game_screen.blit(self.figure_surfaces[0], (0, 0))
         self.game_screen.blit(self.figure_surfaces[1], (WINDOWWIDTH, 0))
 
-        self.game_screen.blit(self.grid_image, (0, 0))
-        self.game_screen.blit(self.grid_image, (WINDOWWIDTH, 0))
+        self.game_screen.blit(self.background_surface, (0, 0))
+        self.game_screen.blit(self.background_surface, (WINDOWWIDTH, 0))
