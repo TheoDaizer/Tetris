@@ -13,10 +13,10 @@ if __name__ == '__main__':
     pygame.display.set_caption('PvP Tetris')
     clock = pygame.time.Clock()
 
-    window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), pygame.RESIZABLE)
-    background = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+    window_surface = pygame.display.set_mode((FIELDWIDTH, FIELDHEIGHT), pygame.RESIZABLE)
+    background = pygame.Surface((FIELDWIDTH, FIELDHEIGHT))
     background.fill(pygame.Color('#000000'))
-    manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
+    manager = pygame_gui.UIManager((FIELDWIDTH, FIELDHEIGHT))
 
     confirm_start_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 240), (300, 100)),
                                                         text='Press Space to Start',
@@ -61,8 +61,8 @@ if __name__ == '__main__':
         tetris_game = game.Game()
         running = True
 
-        game_part = pygame.Surface((WINDOWWIDTH-200, WINDOWHEIGHT))
-        gui_part = pygame.Surface((200, WINDOWHEIGHT))
+        game_part = pygame.Surface((FIELDWIDTH - 200, FIELDHEIGHT))
+        gui_part = pygame.Surface((200, FIELDHEIGHT))
 
         while running:
             dt_frame = clock.tick(FPS)  # time from previous frame in milliseconds. argument provides fps limitation
@@ -87,7 +87,7 @@ if __name__ == '__main__':
             render(tetris_game, game_part)
             window_surface.blit(background, (0, 0))  # "clearing screen" by filling it with one color
             window_surface.blit(game_part, (0, 0))
-            window_surface.blit(gui_part, (WINDOWWIDTH-200, 0))
+            window_surface.blit(gui_part, (FIELDWIDTH - 200, 0))
 
 
             pygame.display.update()  # updating screen

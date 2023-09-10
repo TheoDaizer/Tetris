@@ -4,8 +4,11 @@ TILESIZE = 32  # Tile size in pixels
 GRIDWIDTH = 10
 GRIDHEIGHT = 20
 
-WINDOWWIDTH = GRIDWIDTH * TILESIZE  # Game window width in pixels
-WINDOWHEIGHT = GRIDHEIGHT * TILESIZE  # Game window height in pixels
+FIELDWIDTH = GRIDWIDTH * TILESIZE  # Game window width in pixels
+FIELDHEIGHT = GRIDHEIGHT * TILESIZE  # Game window height in pixels
+
+WINDOWWIDTH = 600
+WINDOWHEIGHT = 800
 
 FPS = 60  # game speed is fixed to 60 frames per second
 
@@ -17,6 +20,6 @@ STARTING_POSITION = (4, 0)  # figure spawn position
 # Theodore
 # IPV4 = '25.47.240.219'  # cmd> ipconfig
 # Denis
-# IPV4 = '25.50.55.253'
+IPV4 = '25.50.55.253'
 # Valentin
-IPV4 = '25.48.128.45'
+# IPV4 = '25.48.128.45'
