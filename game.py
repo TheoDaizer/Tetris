@@ -91,7 +91,7 @@ class Game:
         self.slide_limit = FPS // 20
         self.slide_counter = 0
 
-        self.burned_rows = 40
+        self.burned_rows = 0
         self.game_over = False
 
     def update(self, dt: int):
