@@ -18,8 +18,8 @@ class Renderer:
 
         self.background_surface.fill((0, 0, 0, 0))
         for x, y in ((x, y) for y in range(GRIDHEIGHT) for x in range(GRIDWIDTH)):
-                r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
-                pygame.draw.rect(self.background_surface, (100, 100, 100), r, 1)
+            r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
+            pygame.draw.rect(self.background_surface, (100, 100, 100), r, 1)
 
     def render(self, game_1: NetworkContainer, game_2: NetworkContainer):
         """Main rendering function, that call other renderers"""

@@ -10,9 +10,9 @@ WINDOWHEIGHT = GRIDHEIGHT * TILESIZE  # Game window height in pixels
 FPS = 60  # game speed is fixed to 60 frames per second
 
 FALLINGSPEED = 0.001     # figure falling speed in plying field's cell per millisecond (cell/ms)
-FASTFALLINGSPEED = 0.03  # accelerated figure falling speed (cell/ms)
+SPEEDMULTIPLIER = 20  # accelerated figure falling speed (cell/ms)
 
-STARTING_POSITION = (4, 0) # figure spawn position
+STARTING_POSITION = (4, 0)  # figure spawn position
 
 # Theodore
 # IPV4 = '25.47.240.219'  # cmd> ipconfig
