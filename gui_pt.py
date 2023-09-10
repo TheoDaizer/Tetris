@@ -408,7 +408,7 @@ if __name__ == '__main__':
     settings_menu = SettingsMenu()
     tetris_game = Game()
 
-    # network = Network()
+    # network = network()
     game_renderer = Renderer(window_surface)
 
 
