@@ -2,7 +2,6 @@ import random as rnd
 
 from point import Point
 from figures import *
-from constants import FALLINGSPEED
 from colors import *
 
 
@@ -13,14 +12,12 @@ class Figure:
     all_shapes = [[[Point(pt[0], pt[1]) for pt in var] for var in shape] for shape in tuple_shapes]
     all_colors = (LIGHT_BLUE, BLUE, ORANGE, PINK, GREEN, RED, YELLOW )
 
-    def __init__(self, default_position: Point, default_orientation: int = 0, default_speed: int = FALLINGSPEED):
+    def __init__(self, default_position: Point, default_orientation: int = 0):
         self.default_position = default_position
         self.default_orientation = default_orientation
-        self.default_speed = default_speed
 
         self.position = None
         self.orientation = None
-        self.speed = None
         self.color = None
         self.shape = None
 
@@ -41,7 +38,6 @@ class Figure:
     def refresh(self):
         self.position = self.default_position
         self.orientation = self.default_orientation
-        self.speed = self.default_speed
 
         shape_var = rnd.randrange(len(self.all_shapes))
         self.shape = self.all_shapes[shape_var]

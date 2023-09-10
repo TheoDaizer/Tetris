@@ -1,6 +1,6 @@
 import pygame
 
-from constants import FALLINGSPEED, FASTFALLINGSPEED, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
+from constants import FALLINGSPEED, SPEEDMULTIPLIER, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
 
 from point import Point
 from figure import Figure
@@ -81,6 +81,8 @@ class Game:
     def __init__(self):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
         self.figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]))
+        self.speed = FALLINGSPEED
+        self.speed_multiplier = 1
         self.field_updated = False
 
         self.key_left = False
@@ -89,20 +91,25 @@ class Game:
         self.slide_limit = FPS // 20
         self.slide_counter = 0
 
+        self.burned_rows = 0
         self.game_over = False
 
     def update(self, dt: int):
         dx = (self.key_right - self.key_left)
+        dy = dt * self.speed * self.speed_multiplier
+        if dy > 1:
+            dy = 1
+
         self.slide_counter += self.key_right or self.key_left
         if (self.slide_counter == self.slide_limit and
                 not (self.check_collision(Point(dx, 0), self.figure.orientation))):
             self.slide_counter = 0
-            delta = Point(dx, dt * self.figure.speed)
+            delta = Point(dx, dy)
         else:
-            delta = Point(0, dt * self.figure.speed)
+            delta = Point(0, dy)
 
         if self.check_collision(delta, self.figure.orientation):
-            burned_rows = self.freeze_figure()
+            self.freeze_figure()
         else:
             self.figure.move(delta)
 
@@ -124,13 +131,13 @@ class Game:
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 self.rotation_handler()
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                self.figure.speed = FASTFALLINGSPEED
+                self.speed_multiplier = SPEEDMULTIPLIER
             if event.key == pygame.K_SPACE:
                 self.figure_drop()
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                self.figure.speed = FALLINGSPEED
+                self.speed_multiplier = 1
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 self.key_left = False
                 self.slide_counter = 0
@@ -148,6 +155,10 @@ class Game:
                 self.game_over = True
                 break
         self.figure.refresh()
+        self.burned_rows += burned_rows
+        print('Burned rows total: ', self.burned_rows)
+        self.speed = FALLINGSPEED * (self.burned_rows // 10 + 1)
+        print('Current speed: ', self.speed * 1000)
         self.field_updated = True
         return burned_rows
 
@@ -171,11 +182,11 @@ class Game:
 
         for pt in self.figure.shape[orientation]:
             point_position = self.figure.position + pt
-            if(point_position.y < 0):
+            if point_position.y < 0:
                 delta += Point(0, 1)
-            if(point_position.x < 0):
+            if point_position.x < 0:
                 delta += Point(1, 0)
-            if(point_position.x >= GRIDWIDTH):
+            if point_position.x >= GRIDWIDTH:
                 delta += Point(-1, 0)
 
         if not self.check_collision(delta, orientation):
