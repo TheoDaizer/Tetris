@@ -21,6 +21,8 @@ class Renderer:
             r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
             pygame.draw.rect(self.background_surface, (100, 100, 100), r, 1)
 
+        self.block_image = pygame.image.load("resources/tetris_block.png")
+
     def render(self, game_1: NetworkContainer, game_2: NetworkContainer):
         """Main rendering function, that call other renderers"""
         if game_1.field is not None:
@@ -42,6 +44,7 @@ class Renderer:
             if field[y][x] is not None:
                 r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
                 pygame.draw.rect(self.field_surfaces[game_n], field[y][x], r, 0)
+                self.field_surfaces[game_n].blit(self.block_image, (x * TILESIZE, y * TILESIZE))
 
     def render_figure(self, figure, shadow, figure_color, game_n):
         """Rendering figure with filled rectangles of figure's color"""
@@ -58,6 +61,7 @@ class Renderer:
                 int(pt.x) * TILESIZE, int(pt.y) * TILESIZE,
                 TILESIZE, TILESIZE)
             pygame.draw.rect(self.figure_surfaces[game_n], figure_color, r, 0)
+            self.figure_surfaces[game_n].blit(self.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
 
     def render_game_screen(self):
 
