@@ -1,5 +1,5 @@
 import pygame
-
+from typing import Optional
 from constants import FALLINGSPEED, SPEEDMULTIPLIER, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
 
 from .field import Field
@@ -9,9 +9,9 @@ from .point import Point
 
 class Game:
     """Class that contains all essential game elements"""
-    def __init__(self):
+    def __init__(self, seed: Optional[float] = None):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
-        self.figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]))
+        self.figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]), seed=seed)
         self.speed = FALLINGSPEED
         self.speed_multiplier = 1
         self.field_updated = False
