@@ -15,9 +15,15 @@ class SinglePlayerContainer(Container):
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.sp_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
 
+        self.music = pygame.mixer.Sound('resources/8_bit_-_Korobejniki.mp3')
+        self.music.play(-1)
+
     @property
     def new_container(self):
-        return 'menu' if self.game.game_over else None
+        if self.game.game_over:
+            self.music.stop()
+            return 'menu'
+        return None
 
     def update(self, time_delta: float):
         for event in pygame.event.get():

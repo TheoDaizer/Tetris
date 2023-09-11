@@ -11,6 +11,7 @@ class SurfaceInterface:
         self.container: Container = MenuContainer()
 
     def run(self):
+
         while True:
             dt = clock.tick(FPS)
 
