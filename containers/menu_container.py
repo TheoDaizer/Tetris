@@ -1,3 +1,4 @@
+import pygame
 import pygame_gui
 from pygame.surface import Surface
 
@@ -9,6 +10,7 @@ from containers import Container
 class MenuContainer(Container):
     def __init__(self):
         self.menu_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
+        self.fill_background()
 
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
         self.buttons = Buttons(self.manager)
@@ -19,12 +21,16 @@ class MenuContainer(Container):
     def new_container(self):
         return self.menu.window_container
 
+    def fill_background(self):
+        self.menu_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
+
     def update(self, time_delta: float):
         self.menu.process_events()
         self.manager.update(time_delta)
 
         if self.menu.is_changed:
-            self.menu_surface.fill("black")
+            self.fill_background()
+            # self.menu_surface.fill("black")
             self.menu.is_changed = False
 
         self.manager.draw_ui(self.menu_surface)

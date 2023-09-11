@@ -1,1 +1,2 @@
-from game.game import Game
+from .game import Game
+from .game_field_renderer import GameFieldRenderer
