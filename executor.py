@@ -1,48 +1,42 @@
 import pygame
-import sys
-
 from constants import *
-from renderer import Renderer
-from network import Network, NetworkContainer
+
+from containers import Container, MenuContainer, SinglePlayerContainer
+
+CONTAINERS = {'menu': MenuContainer, 'sp': SinglePlayerContainer}
+
+
+class SurfaceInterface:
+    def __init__(self):
+        self.container: Container = MenuContainer()
+
+    def run(self):
+        while True:
+
+            dt = clock.tick(FPS)
+            self.container.update(dt)
+            if self.container.new_container is not None:
+                self.container = CONTAINERS[self.container.new_container]()
+            window_surface.blit(background, (0, 0))
+
+            window_surface.blit(self.container.render(), (0, 0))
+            pygame.display.update()
+
 
 if __name__ == '__main__':
-    network = Network()
-    network_counter = FPS
-    player_2 = None
 
     pygame.init()
+    pygame.display.set_caption('PvP Tetris')
     clock = pygame.time.Clock()
 
-    game_screen = pygame.display.set_mode((WINDOWWIDTH * 2, WINDOWHEIGHT))
-    game = network.get_game()
+    window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), pygame.RESIZABLE)
 
+    background = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+    background.fill(pygame.Color('#000000'))
 
-    game_renderer = Renderer(game_screen)
+    game_field_surface = pygame.Surface((WINDOWWIDTH * 2 // 3, WINDOWHEIGHT))
+    game_interface_surface = pygame.Surface((WINDOWWIDTH // 3, WINDOWHEIGHT))
 
-    clock.tick()  # time restart
-    while True:
-        dt = clock.tick(FPS)  # time from previous frame in milliseconds. argument provides fps limitation
+    interface = SurfaceInterface()
 
-        if game.game_over:
-            pygame.quit()
-            sys.exit()
-
-        for user_input in pygame.event.get():
-            if user_input.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            if user_input.type == pygame.KEYDOWN or user_input.type == pygame.KEYUP:
-                game.keyboard_input(user_input)
-
-        game.update(dt)
-
-        player = NetworkContainer(game)
-        network_counter -= 1
-        if network_counter == 0:
-            network_counter = FPS
-            player_2 = network.send(player)
-
-        game_renderer.render(player, player_2)
-        pygame.display.flip()  # updating screen
-        #print(dt)
+    interface.run()
