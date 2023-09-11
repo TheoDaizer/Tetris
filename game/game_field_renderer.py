@@ -1,10 +1,8 @@
 import pygame
 from pygame.surface import Surface
 
-from constants import TILESIZE
-from network import NetworkContainer
-
-from constants import FIELDWIDTH, FIELDHEIGHT
+from constants import TILESIZE, FIELDWIDTH, FIELDHEIGHT
+from game import GameDataContainer
 
 
 class GameFieldRenderer:
@@ -14,7 +12,7 @@ class GameFieldRenderer:
         self.figure_surfaces: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
         self.grid_image = pygame.image.load("resources/tetris_bg.png")
 
-    def render(self, game_container: NetworkContainer):
+    def render(self, game_container: GameDataContainer):
         """Main rendering function, that call other renderers"""
         if game_container.field is not None:
             self.render_field(game_container.field)

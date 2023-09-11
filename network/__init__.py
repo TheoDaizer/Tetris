@@ -1,1 +1,1 @@
-from .network import NetworkContainer
+from .network import Network
