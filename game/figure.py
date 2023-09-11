@@ -1,9 +1,10 @@
 import random as rnd
 
-from point import Point
-from figures import *
+from .point import Point
+from .figures import *
+from .colors import *
+
 from constants import GRIDHEIGHT
-from colors import *
 
 
 class Figure:
