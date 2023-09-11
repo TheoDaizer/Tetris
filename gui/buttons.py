@@ -70,7 +70,7 @@ class Buttons:
             manager=manager,
         )
 
-        # multi player buttons
+        #  multiplayer buttons
         self.start_server_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((button_pos_x, button_pos_y2), (button_size_x, button_size_y)),
             text='Start Server',
@@ -102,7 +102,7 @@ class Buttons:
         )
 
         # highscores
-        self.highscore_table = pygame_gui.elements.UITextBox(
+        self.highscores_table = pygame_gui.elements.UITextBox(
             relative_rect=pygame.Rect((button_pos_x, button_pos_y1), (button_size_x, button_size_y)),
             html_text='Highscores',
             manager=manager,
@@ -127,6 +127,37 @@ class Buttons:
             manager=manager,
         )
 
+    def main_menu(self):
+        self.hide()
+        self.single_player_button.visible = True
+        self.multiplayer_button.visible = True
+        self.settings_button.visible = True
+        self.exit_button.visible = True
+
+    def single_player(self):
+        self.hide()
+        self.new_game_button.visible = True
+        self.high_scores_button.visible = True
+        self.sp_btm_button.visible = True
+
+    def multiplayer(self):
+        self.hide()
+        self.start_server_button.visible = True
+        self.start_multiplayer_button.visible = True
+        self.ip_entry_box.visible = True
+        self.ip_text_box.visible = True
+        self.mp_btm_button.visible = True
+
+    def highscores(self):
+        self.hide()
+        self.highscores_table.visible = True
+        self.hs_btm_button.visible = True
+
+    def settings(self):
+        self.hide()
+        self.settings_resolution.visible = True
+        self.set_btm_button.visible = True
+
     def hide(self):
         self.single_player_button.visible = False
         self.multiplayer_button.visible = False
@@ -140,7 +171,7 @@ class Buttons:
         self.ip_entry_box.visible = False
         self.ip_text_box.visible = False
         self.mp_btm_button.visible = False
-        self.highscore_table.visible = False
+        self.highscores_table.visible = False
         self.hs_btm_button.visible = False
         self.settings_resolution.visible = False
         self.set_btm_button.visible = False

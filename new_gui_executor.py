@@ -1,9 +1,9 @@
-import sys
-
 import pygame
 from constants import *
 
-from containers import MenuContainer, Container
+from containers import Container, MenuContainer, SinglePlayerContainer
+
+CONTAINERS = {'menu': MenuContainer, 'sp': SinglePlayerContainer}
 
 
 class SurfaceInterface:
@@ -13,14 +13,10 @@ class SurfaceInterface:
     def run(self):
         while True:
 
-            # events = pygame.event.get()
-            # for event in events:
-            #     if event.type == pygame.QUIT:
-            #         pygame.quit()
-            #         sys.exit()
-
             dt = clock.tick(FPS)
             self.container.update(dt)
+            if self.container.new_container is not None:
+                self.container = CONTAINERS[self.container.new_container]()
             window_surface.blit(background, (0, 0))
 
             window_surface.blit(self.container.render(), (0, 0))

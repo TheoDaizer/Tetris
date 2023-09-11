@@ -17,23 +17,23 @@ class GameFieldRenderer:
     def render(self, game_container: NetworkContainer):
         """Main rendering function, that call other renderers"""
         if game_container.field is not None:
-            self.render_field(game_container.field, 0)
-        self.render_figure(game_container.figure, game_container.figure_color,  0)
+            self.render_field(game_container.field)
+        self.render_figure(game_container.figure, game_container.figure_color)
 
-        self.render_game_screen()
+        return self.render_game_screen()
 
-    def render_field(self, field, game_n: int):
+    def render_field(self, field):
         """Rendering game grid with no fill rectangles"""
-        self.field_surfaces[game_n].fill("black")  # "clearing screen" by filling it with one color
+        self.field_surfaces.fill("black")  # "clearing screen" by filling it with one color
 
         for x, y in ((x, y) for y in range(len(field)) for x in range(len(field[0]))):
             if field[y][x] is not None:
                 r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
-                pygame.draw.rect(self.field_surfaces[game_n], field[y][x], r, 0)
+                pygame.draw.rect(self.field_surfaces, field[y][x], r, 0)
 
-    def render_figure(self, figure, figure_color, game_n):
+    def render_figure(self, figure, figure_color):
         """Rendering figure with filled rectangles of figure's color"""
-        self.figure_surfaces[game_n].blit(self.field_surfaces[game_n], (0, 0))
+        self.figure_surfaces.blit(self.field_surfaces, (0, 0))
 
         for pt in figure:
             r = pygame.Rect(
@@ -42,7 +42,7 @@ class GameFieldRenderer:
                 TILESIZE,
                 TILESIZE
                 )
-            pygame.draw.rect(self.figure_surfaces[game_n], figure_color, r, 0)
+            pygame.draw.rect(self.figure_surfaces, figure_color, r, 0)
 
     def render_game_screen(self):
         self.game_surface.blit(self.figure_surfaces, (0, 0))

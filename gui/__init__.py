@@ -1,2 +1,2 @@
 from gui.buttons import Buttons
-from gui.menus import MainMenu, SinglePlayerMenu
+from gui.menu import GameMenu

@@ -2,29 +2,8 @@ import pygame
 
 from constants import FALLINGSPEED, SPEEDMULTIPLIER, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
 
-from point import Point
-from figure import Figure
-
-
-class Node:
-    """Game field base object."""
-    color = None
-
-    def __repr__(self):
-        return ('-', '+')[self.color is not None]
-
-    def __init__(self):
-        self.color = Node.color
-
-    @property
-    def is_active(self):
-        return self.color is not None
-
-    def clean(self):
-        self.color = Node.color
-
-    def update(self, color):
-        self.color = color
+from game.point import Point
+from game.figure import Figure
 
 
 class Field:
@@ -94,7 +73,7 @@ class Game:
         self.burned_rows = 0
         self.game_over = False
 
-    def update(self, dt: int):
+    def update(self, dt: float):
         dx = (self.key_right - self.key_left)
         dy = dt * self.speed * self.speed_multiplier
         if dy > 1:
