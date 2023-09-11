@@ -12,14 +12,13 @@ class SurfaceInterface:
 
     def run(self):
         while True:
-
             dt = clock.tick(FPS)
+
             self.container.update(dt)
             if self.container.new_container is not None:
                 self.container = CONTAINERS[self.container.new_container]()
-            window_surface.blit(background, (0, 0))
 
-            window_surface.blit(self.container.render(), (0, 0))
+            self.container.render(window_surface)
             pygame.display.update()
 
 

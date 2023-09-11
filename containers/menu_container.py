@@ -33,7 +33,6 @@ class MenuContainer(Container):
             # self.menu_surface.fill("black")
             self.menu.is_changed = False
 
+    def render(self, window_surface: Surface):
         self.manager.draw_ui(self.menu_surface)
-
-    def render(self) -> Surface:
-        return self.menu_surface
+        window_surface.blit(self.menu_surface, (0, 0))

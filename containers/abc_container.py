@@ -9,5 +9,5 @@ class Container(ABC):
         pass
 
     @abstractmethod
-    def render(self) -> Surface:
+    def render(self, window_surface: Surface):
         pass

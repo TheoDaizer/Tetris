@@ -30,8 +30,8 @@ class SinglePlayerContainer(Container):
 
         self.game.update(time_delta)
 
-    def render(self) -> Surface:
+    def render(self, window_surface: Surface):
         player = self.game.dump()
         game_field_surface = self.renderer.render(player)
         self.sp_surface.blit(game_field_surface, (WINDOWWIDTH // 4, 50))
-        return self.sp_surface
+        window_surface.blit(self.sp_surface, (0, 0))
