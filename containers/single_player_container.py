@@ -1,6 +1,6 @@
-import sys
 import pygame
 from pygame.surface import Surface
+from pygame.event import Event
 
 from game import Game, GameFieldRenderer
 from constants import WINDOWWIDTH, WINDOWHEIGHT
@@ -8,7 +8,9 @@ from containers import Container
 
 
 class SinglePlayerContainer(Container):
-    def __init__(self):
+    def __init__(self, window_surface):
+        super().__init__(window_surface)
+
         self.renderer = GameFieldRenderer()
         self.game = Game()
 
@@ -25,19 +27,16 @@ class SinglePlayerContainer(Container):
             return 'menu'
         return None
 
+    def event_handler(self, event: Event):
+        if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+            self.game.keyboard_input(event)
+
     def update(self, time_delta: float):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-                self.game.keyboard_input(event)
-
         self.game.update(time_delta)
 
-    def render(self, window_surface: Surface):
+    def render(self):
         player = self.game.dump()
         game_field_surface = self.renderer.render(player)
         self.sp_surface.blit(game_field_surface, (WINDOWWIDTH // 4, 50))
-        window_surface.blit(self.sp_surface, (0, 0))
+
+        self.window_surface.blit(self.sp_surface, (0, 0))

@@ -1,3 +1,4 @@
+import sys
 import pygame
 from constants import *
 
@@ -6,37 +7,35 @@ from containers import Container, MenuContainer, SinglePlayerContainer
 CONTAINERS = {'menu': MenuContainer, 'sp': SinglePlayerContainer}
 
 
-class SurfaceInterface:
+class MainWindow:
     def __init__(self):
-        self.container: Container = MenuContainer()
+        pygame.init()
+        pygame.display.set_caption('PvP Tetris')
+
+        self.clock = pygame.time.Clock()
+        self.window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), pygame.RESIZABLE)
+
+        self.container: Container = MenuContainer(self.window_surface)
 
     def run(self):
 
         while True:
-            dt = clock.tick(FPS)
+            dt = self.clock.tick(FPS)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                self.container.event_handler(event)
 
             self.container.update(dt)
             if self.container.new_container is not None:
-                self.container = CONTAINERS[self.container.new_container]()
+                self.container = CONTAINERS[self.container.new_container](self.window_surface)
 
-            self.container.render(window_surface)
+            self.container.render()
             pygame.display.update()
 
 
 if __name__ == '__main__':
-
-    pygame.init()
-    pygame.display.set_caption('PvP Tetris')
-    clock = pygame.time.Clock()
-
-    window_surface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), pygame.RESIZABLE)
-
-    background = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
-    background.fill(pygame.Color('#000000'))
-
-    game_field_surface = pygame.Surface((WINDOWWIDTH * 2 // 3, WINDOWHEIGHT))
-    game_interface_surface = pygame.Surface((WINDOWWIDTH // 3, WINDOWHEIGHT))
-
-    interface = SurfaceInterface()
-
-    interface.run()
+    MainWindow().run()
