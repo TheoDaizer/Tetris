@@ -41,9 +41,11 @@ class Game:
 
         if self.check_collision(delta, self.figure.orientation):
             self.freeze_figure()
+            self.update_shadow()
         else:
             self.figure.move(delta)
-            self.update_shadow()
+            if delta.x:
+                self.update_shadow()
 
     def keyboard_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -64,6 +66,7 @@ class Game:
                     self.update_shadow()
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 self.rotation_handler()
+                self.update_shadow()
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.speed_multiplier = SPEEDMULTIPLIER
             if event.key == pygame.K_SPACE:
@@ -81,7 +84,9 @@ class Game:
     
     def freeze_figure(self):
         """Update the field state with current shape and refresh figure."""
-        burned_rows = self.field.update(self.figure.shape_position, self.figure.color)
+        burned_rows = self.field.update(Figure.shape_position(self.figure.position,
+                                                              self.figure.shape_variant,
+                                                              self.figure.orientation), self.figure.color)
         print('Burned rows: ', burned_rows)
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position
@@ -130,9 +135,10 @@ class Game:
     def figure_drop(self):
         self.figure.move(Point(0, self.figure.shadow_position.y - self.figure.position.y))
         self.freeze_figure()
+        self.update_shadow()
 
     def update_shadow(self):
-        for field_y in range(int(self.figure.position.y) + 1, GRIDHEIGHT):
+        for field_y in range(int(self.figure.position.y) + 1, GRIDHEIGHT + 1):
             delta = Point(0, field_y - self.figure.position.y)
             if self.check_collision(delta, self.figure.orientation):
                 self.figure.shadow_position = Point(self.figure.position.x, field_y - 1)
@@ -144,9 +150,10 @@ class Game:
 
 class GameDataContainer:
     def __init__(self, game: Game):
-        self.figure = game.figure.shape_position
-        self.figure_shadow = game.figure.shadow_shape_position
-        self.figure_color = game.figure.color
+        self.figure_position = game.figure.position
+        self.shadow_position = game.figure.shadow_position
+        self.shape_variant = game.figure.shape_variant
+        self.orientation = game.figure.orientation
         self.field = None
         if game.field_updated:
             self.field_updated = False

@@ -19,25 +19,21 @@ class Figure:
 
         self.default_position = default_position
         self.default_orientation = default_orientation
-        self.default_shadow_position = Point(self.default_position.x, GRIDHEIGHT - 1)
+        self.default_shadow_position = Point(self.default_position.x, GRIDHEIGHT - 2)
 
         self.position = None
         self.orientation = None
         self.shadow_position = None
+        self.shape_variant = None
         self.color = None
         self.shape = None
 
         self.refresh()
 
-    @property
-    def shape_position(self):
-        shape = self.shape[self.orientation]
-        return [Point(self.position.x + pt.x, self.position.y + pt.y) for pt in shape]
-
-    @property
-    def shadow_shape_position(self):
-        shape = self.shape[self.orientation]
-        return [Point(self.shadow_position.x + pt.x, self.shadow_position.y + pt.y) for pt in shape]
+    @staticmethod
+    def shape_position(position: Point, shape_variant: int, orientation: int):
+        shape = Figure.all_shapes[shape_variant][orientation]
+        return [Point(position.x + pt.x, position.y + pt.y) for pt in shape]
 
     def rotate(self):
         self.orientation = (self.orientation + 1) % len(self.shape)
@@ -50,6 +46,6 @@ class Figure:
         self.shadow_position = self.default_shadow_position
         self.orientation = self.default_orientation
 
-        shape_var = rnd.randrange(len(self.all_shapes))
-        self.shape = self.all_shapes[shape_var]
-        self.color = self.all_colors[shape_var]
+        self.shape_variant = rnd.randrange(len(self.all_shapes))
+        self.shape = self.all_shapes[self.shape_variant]
+        self.color = self.all_colors[self.shape_variant]

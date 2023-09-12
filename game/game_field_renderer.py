@@ -1,5 +1,7 @@
 import pygame
 from pygame.surface import Surface
+from .figure import Figure
+from .point import Point
 
 from constants import TILESIZE, FIELDWIDTH, FIELDHEIGHT, GRIDHEIGHT, GRIDWIDTH
 from game import GameDataContainer
@@ -26,7 +28,8 @@ class GameFieldRenderer:
         """Main rendering function, that call other renderers"""
         if game_data.field is not None:
             self.render_field(game_data.field)
-        self.render_figure(game_data.figure, game_data.figure_shadow, game_data.figure_color)
+        self.render_figure(game_data.figure_position, game_data.shadow_position,
+                           game_data.shape_variant, game_data.orientation)
 
         return self.render_game_screen()
 
@@ -40,21 +43,21 @@ class GameFieldRenderer:
                 pygame.draw.rect(self.field_surfaces, field[y][x], r, 0)
                 self.field_surfaces.blit(self.block_image, (x * TILESIZE, y * TILESIZE))
 
-    def render_figure(self, figure, shadow, figure_color):
+    def render_figure(self, figure_position: Point, shadow_position: Point, shape_variant: int, orientation: int):
         """Rendering figure with filled rectangles of figure's color"""
         self.figure_surfaces.blit(self.field_surfaces, (0, 0))
 
-        for pt in shadow:
-            r = pygame.Rect(
+        for pt in Figure.shape_position(shadow_position, shape_variant, orientation):
+            shadow_rect = pygame.Rect(
                 int(pt.x) * TILESIZE + 1, int(pt.y) * TILESIZE + 1,
                 TILESIZE - 2, TILESIZE - 2)
-            pygame.draw.rect(self.figure_surfaces, (200, 200, 200), r, 2)
+            pygame.draw.rect(self.figure_surfaces, (200, 200, 200), shadow_rect, 2)
 
-        for pt in figure:
-            r = pygame.Rect(
+        for pt in Figure.shape_position(figure_position, shape_variant, orientation):
+            figure_rect = pygame.Rect(
                 int(pt.x) * TILESIZE, int(pt.y) * TILESIZE,
                 TILESIZE, TILESIZE)
-            pygame.draw.rect(self.figure_surfaces, figure_color, r, 0)
+            pygame.draw.rect(self.figure_surfaces, Figure.all_colors[shape_variant], figure_rect, 0)
             self.figure_surfaces.blit(self.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
 
     def render_game_screen(self):
