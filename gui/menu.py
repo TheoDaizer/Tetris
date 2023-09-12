@@ -15,7 +15,7 @@ class GameMenu:
 
         self._button_container = 'main'
         self._is_changed = False
-        self._window_container = None
+        self._new_container = None
 
         self.buttons.main_menu()
 
@@ -29,8 +29,8 @@ class GameMenu:
         self._button_container = value
 
     @property
-    def window_container(self):
-        return self._window_container
+    def new_container(self):
+        return self._new_container
 
     @property
     def is_changed(self):
@@ -59,7 +59,7 @@ class GameMenu:
         #  Single player Menu
         elif self.button_container == 'single':
             if event.ui_element == self.buttons.new_game_button:
-                self._window_container = 'sp'
+                self._new_container = 'sp'
             if event.ui_element == self.buttons.high_scores_button:
                 self.button_container = 'highscores'
                 self.buttons.highscores()

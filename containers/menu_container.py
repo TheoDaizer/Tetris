@@ -22,8 +22,8 @@ class MenuContainer(Container):
         self.menu = GameMenu(self.manager, self.buttons)
 
     @property
-    def new_container(self):
-        return self.menu.window_container
+    def status(self):
+        return self.menu.new_container
 
     def fill_background(self):
         self.menu_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))

@@ -21,7 +21,7 @@ class SinglePlayerContainer(Container):
         self.music.play(-1)
 
     @property
-    def new_container(self):
+    def status(self):
         if self.game.game_over:
             self.music.stop()
             return 'menu'
