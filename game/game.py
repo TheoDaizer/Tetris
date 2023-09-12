@@ -25,6 +25,8 @@ class Game:
         self.burned_rows = 0
         self.game_over = False
 
+        self.burn_sound = pygame.mixer.Sound('resources/8-bit-coin_130bpm_A_minor.wav')
+
     def update(self, dt: float):
         dx = (self.key_right - self.key_left)
         dy = dt * self.speed * self.speed_multiplier
@@ -94,10 +96,13 @@ class Game:
                 self.game_over = True
                 break
         self.figure.refresh()
-        self.burned_rows += burned_rows
-        print('Burned rows total: ', self.burned_rows)
-        self.speed = FALLINGSPEED * (self.burned_rows // 10 + 1)
-        print('Current speed: ', self.speed * 1000)
+        if burned_rows:
+            self.burned_rows += burned_rows
+            print('Burned rows total: ', self.burned_rows)
+            self.speed = FALLINGSPEED * (self.burned_rows // 10 + 1)
+            print('Current speed: ', self.speed * 1000)
+            self.burn_sound.play(0)
+
         self.field_updated = True
         return burned_rows
 
