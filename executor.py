@@ -30,8 +30,8 @@ class MainWindow:
                 self.container.event_handler(event)
 
             self.container.update(dt)
-            if self.container.new_container is not None:
-                self.container = CONTAINERS[self.container.new_container](self.window_surface)
+            if self.container.status:
+                self.container = CONTAINERS[self.container.status](self.window_surface)
 
             self.container.render()
             pygame.display.update()

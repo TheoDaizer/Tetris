@@ -8,6 +8,11 @@ class Container(ABC):
     def __init__(self, window_surface: Surface):
         self.window_surface = window_surface
 
+    @property
+    @abstractmethod
+    def status(self):
+        pass
+
     @abstractmethod
     def event_handler(self, event: Event):
         pass
