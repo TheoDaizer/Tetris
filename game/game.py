@@ -1,4 +1,3 @@
-import pygame
 from typing import Optional
 from constants import FALLINGSPEED, SPEED_INCREMENT, SPEEDMULTIPLIER, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
 
@@ -14,6 +13,7 @@ class Game:
     def __init__(self, seed: Optional[float] = None):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
         self.figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]), seed=seed)
+        self.next_figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]), seed=seed)
         self.speed = FALLINGSPEED
         self.speed_multiplier = 1
         self.field_updated = False
@@ -40,7 +40,7 @@ class Game:
 
         if self.key_space:
             dropped_y = self.figure_drop()
-            self.score += int(dropped_y)
+            self.score += int(dropped_y) * 2
             current_burned_rows = self.freeze_figure()
             self.update_shadow()
 
@@ -62,7 +62,10 @@ class Game:
                 current_burned_rows = self.freeze_figure()
                 self.update_shadow()
             else:
+                last_pos_y = self.figure.position.y
                 self.figure.move(delta)
+                if self.key_down and int(self.figure.position.y) - int(last_pos_y) >= 1:
+                    self.score += 1
                 if delta.x:
                     self.update_shadow()
 
@@ -102,9 +105,11 @@ class Game:
         self.update_shadow()
 
     def key_down_down(self):
+        self.key_down = True
         self.speed_multiplier = SPEEDMULTIPLIER
 
     def key_down_up(self):
+        self.key_down = False
         self.speed_multiplier = 1
 
     def key_space_down(self):
@@ -120,7 +125,8 @@ class Game:
             pos = pt + self.figure.position
             if pos.y == 0 and not burned_rows:
                 return self.gabella()
-        self.figure.refresh()
+        self.figure = self.next_figure
+        self.next_figure.refresh()
 
         self.field_updated = True
         return burned_rows
