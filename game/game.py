@@ -73,42 +73,42 @@ class Game:
             self.update_speed()
             self.update_burned_score(current_burned_rows)
 
-    def keyboard_input(self, event):
-        if event.type == pygame.KEYDOWN:
+    def key_left_down(self):
+        self.key_left = True
+        self.slide_counter = - FPS // 8
+        delta = Point(-1, 0)
+        if not (self.check_collision(delta, self.figure.orientation)):
+            self.figure.move(delta)
+            self.update_shadow()
 
-            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                self.key_left = True
-                self.slide_counter = - FPS // 8
-                delta = Point(-1, 0)
-                if not (self.check_collision(delta, self.figure.orientation)):
-                    self.figure.move(delta)
-                    self.update_shadow()
-            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                self.key_right = True
-                self.slide_counter = - FPS // 8
-                delta = Point(1, 0)
-                if not (self.check_collision(delta, self.figure.orientation)):
-                    self.figure.move(delta)
-                    self.update_shadow()
-            if event.key == pygame.K_UP or event.key == pygame.K_w:
-                self.rotation_handler()
-                self.update_shadow()
-            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                self.speed_multiplier = SPEEDMULTIPLIER
-                self.key_down = True
-            if event.key == pygame.K_SPACE:
-                self.key_space = True
+    def key_left_up(self):
+        self.key_left = False
+        self.slide_counter = 0
 
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                self.key_down = False
-                self.speed_multiplier = 1
-            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                self.key_left = False
-                self.slide_counter = 0
-            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                self.key_right = False
-                self.slide_counter = 0
+    def key_right_down(self):
+        self.key_right = True
+        self.slide_counter = - FPS // 8
+        delta = Point(1, 0)
+        if not (self.check_collision(delta, self.figure.orientation)):
+            self.figure.move(delta)
+            self.update_shadow()
+
+    def key_right_up(self):
+        self.key_right = False
+        self.slide_counter = 0
+
+    def key_up_down(self):
+        self.rotation_handler()
+        self.update_shadow()
+
+    def key_down_down(self):
+        self.speed_multiplier = SPEEDMULTIPLIER
+
+    def key_down_up(self):
+        self.speed_multiplier = 1
+
+    def key_space_down(self):
+        self.key_space = True
     
     def freeze_figure(self):
         """Update the field state with current shape and refresh figure."""
@@ -119,8 +119,7 @@ class Game:
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position
             if pos.y == 0 and not burned_rows:
-                self.game_over = True
-                break
+                return self.gabella()
         self.figure.refresh()
 
         self.field_updated = True
@@ -181,6 +180,11 @@ class Game:
 
     def dump(self):
         return GameDataContainer(game=self)
+
+    def gabella(self):
+        self.game_over = True
+        self.field_updated = False
+        self.is_burned = False
 
 
 class GameDataContainer:

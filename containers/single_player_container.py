@@ -39,8 +39,25 @@ class SinglePlayerContainer(Container):
         return None
 
     def event_handler(self, event: Event):
-        if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-            self.game.keyboard_input(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                self.game.key_left_down()
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                self.game.key_right_down()
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
+                self.game.key_up_down()
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                self.game.key_down_down()
+            if event.key == pygame.K_SPACE:
+                self.game.key_space_down()
+
+        elif event.type == pygame.KEYUP:
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                self.game.key_down_up()
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                self.game.key_left_up()
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                self.game.key_right_up()
 
     def update(self, time_delta: float):
         self.game.update(time_delta)
@@ -48,8 +65,8 @@ class SinglePlayerContainer(Container):
             self.sfx_play()
 
     def render(self):
-        player = self.game.dump()
-        game_field_surface = self.renderer.render(player)
+        game_data = self.game.dump()
+        game_field_surface = self.renderer.render(game_data)
         self.sp_surface.blit(game_field_surface, (WINDOWWIDTH // 4, 50))
 
         self.window_surface.blit(self.sp_surface, (0, 0))
