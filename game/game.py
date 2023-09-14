@@ -1,6 +1,6 @@
 import pygame
 from typing import Optional
-from constants import FALLINGSPEED, SPEEDMULTIPLIER, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
+from constants import FALLINGSPEED, SPEED_INCREMENT, SPEEDMULTIPLIER, GRIDWIDTH, GRIDHEIGHT, FPS, STARTING_POSITION
 
 from .field import Field
 from .figure import Figure
@@ -21,6 +21,7 @@ class Game:
         self.key_left = False
         self.key_right = False
         self.key_space = False
+        self.key_down = False
 
         self.slide_limit = FPS // 20
         self.slide_counter = 0
@@ -32,11 +33,14 @@ class Game:
         self.game_over = False
 
     def update(self, dt: float):
+        print(self.score)
+
         self.is_burned = False
         current_burned_rows = 0
 
         if self.key_space:
-            self.figure_drop()
+            dropped_y = self.figure_drop()
+            self.score += int(dropped_y)
             current_burned_rows = self.freeze_figure()
             self.update_shadow()
 
@@ -91,11 +95,13 @@ class Game:
                 self.update_shadow()
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.speed_multiplier = SPEEDMULTIPLIER
+                self.key_down = True
             if event.key == pygame.K_SPACE:
                 self.key_space = True
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                self.key_down = False
                 self.speed_multiplier = 1
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 self.key_left = False
@@ -152,8 +158,10 @@ class Game:
             self.figure.rotate()
        
     def figure_drop(self):
-        self.figure.move(Point(0, self.figure.shadow_position.y - self.figure.position.y))
+        dy = self.figure.shadow_position.y - self.figure.position.y
+        self.figure.move(Point(0, dy))
         self.key_space = False
+        return dy
 
     def update_shadow(self):
         for field_y in range(int(self.figure.position.y) + 1, GRIDHEIGHT + 1):
@@ -166,10 +174,10 @@ class Game:
         self.level = self.burned_rows // 12 + 1
 
     def update_burned_score(self, burned_rows: int):
-        self.score += Game.scores[burned_rows - 1] * self.level
+        self.score += Game.scores[burned_rows - 1] * self.level / 2
 
     def update_speed(self):
-        self.speed = FALLINGSPEED * self.level
+        self.speed = FALLINGSPEED + SPEED_INCREMENT * (self.level - 1)
 
     def dump(self):
         return GameDataContainer(game=self)
