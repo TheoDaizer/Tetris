@@ -7,7 +7,7 @@ GRIDHEIGHT = 20
 FIELDWIDTH = GRIDWIDTH * TILESIZE  # Game window width in pixels
 FIELDHEIGHT = GRIDHEIGHT * TILESIZE  # Game window height in pixels
 
-WINDOWWIDTH = 600
+WINDOWWIDTH = 640
 WINDOWHEIGHT = 800
 
 FPS = 60  # game speed is fixed to 60 frames per second

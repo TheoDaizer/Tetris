@@ -99,8 +99,7 @@ class Game:
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position
             if pos.y == 0 and not burned_rows:
-                self.game_over = True
-                break
+                return self.gabella()
         self.figure.refresh()
         if burned_rows:
             self.is_burned = True
@@ -158,6 +157,11 @@ class Game:
 
     def dump(self):
         return GameDataContainer(game=self)
+
+    def gabella(self):
+        self.game_over = True
+        self.field_updated = False
+        self.is_burned = False
 
 
 class GameDataContainer:

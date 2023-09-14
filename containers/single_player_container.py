@@ -65,8 +65,8 @@ class SinglePlayerContainer(Container):
             self.sfx_play()
 
     def render(self):
-        player = self.game.dump()
-        game_field_surface = self.renderer.render(player)
+        game_data = self.game.dump()
+        game_field_surface = self.renderer.render(game_data)
         self.sp_surface.blit(game_field_surface, (WINDOWWIDTH // 4, 50))
 
         self.window_surface.blit(self.sp_surface, (0, 0))

@@ -2,9 +2,9 @@ import sys
 import pygame
 from constants import *
 
-from containers import Container, MenuContainer, SinglePlayerContainer
+from containers import Container, MenuContainer, SinglePlayerContainer, HotSeatContainer
 
-CONTAINERS = {'menu': MenuContainer, 'sp': SinglePlayerContainer}
+CONTAINERS = {'menu': MenuContainer, 'sp': SinglePlayerContainer, 'hs': HotSeatContainer}
 
 
 class MainWindow:
