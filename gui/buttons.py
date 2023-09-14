@@ -6,7 +6,9 @@ from constants import WINDOWHEIGHT, WINDOWWIDTH
 
 #  button size
 button_size_x = WINDOWWIDTH / 3
+button_size_x2 = button_size_x * 2
 button_size_y = WINDOWHEIGHT / 8
+button_size_y2 = button_size_y * 2
 
 #  position in the middle of game window
 button_pos_x = WINDOWWIDTH / 2 - button_size_x / 2
@@ -115,9 +117,22 @@ class Buttons:
         )
 
         # settings buttons
-        self.settings_resolution = pygame_gui.elements.UITextBox(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y3), (button_size_x, button_size_y)),
-            html_text='Select Resolution',
+        self.settings_resolution = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((button_pos_x1, button_pos_y1), (button_size_x2, button_size_y)),
+            text='Set Resolution to 800x600',
+            manager=manager,
+        )
+
+        self.settings_resolution_2 = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((button_pos_x1, button_pos_y2), (button_size_x2, button_size_y)),
+            text='Set Resolution to 1600x1200',
+            manager=manager,
+        )
+
+        self.settings_resolution_dd = pygame_gui.elements.ui_drop_down_menu.UIDropDownMenu(
+            relative_rect=pygame.Rect((button_pos_x2, button_pos_y3), (button_size_x, button_size_y)),
+            options_list=["800x600", "1600x1200"],
+            starting_option="800x600",
             manager=manager,
         )
 
@@ -156,6 +171,8 @@ class Buttons:
     def settings(self):
         self.hide()
         self.settings_resolution.visible = True
+        self.settings_resolution_2.visible = True
+        # self.settings_resolution_dd.show()
         self.set_btm_button.visible = True
 
     def hide(self):
@@ -174,4 +191,6 @@ class Buttons:
         self.highscores_table.visible = False
         self.hs_btm_button.visible = False
         self.settings_resolution.visible = False
+        self.settings_resolution_2.visible = False
         self.set_btm_button.visible = False
+        self.settings_resolution_dd.hide()

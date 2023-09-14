@@ -81,3 +81,29 @@ class SettingsMenu(Menu):
     def process_events(self, event: Event):
         if event.ui_element == self.buttons.set_btm_button:
             return MainMenu(self.manager, self.buttons)
+
+        if event.ui_element == self.buttons.settings_resolution:
+            #open constants and edit window-parameters
+            lines = open('constants.py', 'r').readlines()
+            lines[0] = "WINDOWWIDTH = 600\n"
+            lines[1] = "WINDOWHEIGHT = 800\n"
+            lines[2] = """BACKGROUNDPATH = \"resources/background2.jpg\"\n"""
+            new_const = open('constants.py', 'w')
+            new_const.writelines(lines)
+            new_const.close()
+            return SettingsMenu(self.manager, self.buttons)
+
+        if event.ui_element == self.buttons.settings_resolution_2:
+            # open constants and edit window-parameters
+            lines = open('constants.py', 'r').readlines()
+            lines[0] = "WINDOWWIDTH = 1200\n"
+            lines[1] = "WINDOWHEIGHT = 800\n"
+            lines[2] = """BACKGROUNDPATH = \"resources/background3.jpg\"\n"""
+            new_const = open('constants.py', 'w')
+            new_const.writelines(lines)
+            new_const.close()
+            return SettingsMenu(self.manager, self.buttons)
+
+        # if event.ui_element == self.buttons.settings_resolution_dd.current_state == "1600x1200":
+        #     print("test")
+        #     return MainMenu(self.manager, self.buttons)
