@@ -1,9 +1,10 @@
 import pygame
+import pygame_gui
 from pygame.surface import Surface
 from pygame.event import Event
 
 from game import Game, GameFieldRenderer
-from constants import WINDOWWIDTH, WINDOWHEIGHT
+from constants import WINDOWWIDTH, WINDOWHEIGHT, BACKGROUNDPATH
 from containers import Container
 
 
@@ -16,6 +17,8 @@ class SinglePlayerContainer(Container):
 
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.sp_surface.blit(pygame.image.load(BACKGROUNDPATH), (0, 0))
+        self.gamefield_pos_x =  150 + (WINDOWWIDTH - 150) // 8
+        self.gamefield_pos_y = 50
 
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
         self.sp_ui_panel = pygame_gui.elements.ui_panel.UIPanel(
@@ -24,12 +27,21 @@ class SinglePlayerContainer(Container):
         )
 
         self.sp_pause_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((0, 0), (100, 100)),
+            relative_rect=pygame.Rect((25, 25), (100, 100)),
             text='Pause',
             container=self.sp_ui_panel,
             manager=self.manager,
             visible=True
         )
+
+        self.sp_btm_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((25, 125), (100, 100)),
+            text='BTM',
+            container=self.sp_ui_panel,
+            manager=self.manager,
+            visible=True
+        )
+
         self.pause_state = False
 
         self.freeze_sound = pygame.mixer.Sound('resources/sfx-1.mp3')
@@ -63,8 +75,16 @@ class SinglePlayerContainer(Container):
             if event.ui_element == self.sp_pause_button:
                 if self.pause_state == False:
                     self.pause_state = True
+                    self.music.stop()
                 else:
                     self.pause_state = False
+                    self.music.play(-1)
+
+            if event.ui_element == self.sp_btm_button:
+                self.game.game_over = True
+                self.music.stop()
+                self.game_over.play()
+                return 'menu'
 
     def update(self, time_delta: float):
         if self.pause_state == False:
@@ -78,7 +98,8 @@ class SinglePlayerContainer(Container):
     def render(self):
         player = self.game.dump()
         game_field_surface = self.renderer.render(player)
-        self.sp_surface.blit(game_field_surface, (WINDOWWIDTH // 4, 50))
+        self.sp_surface.blit(game_field_surface, (self.gamefield_pos_x, self.gamefield_pos_y))
+        self.manager.draw_ui(self.sp_surface)
 
         self.window_surface.blit(self.sp_surface, (0, 0))
 
