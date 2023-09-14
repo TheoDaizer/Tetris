@@ -9,6 +9,8 @@ from .point import Point
 
 class Game:
     """Class that contains all essential game elements"""
+    scores = (100, 300, 700, 1500)
+
     def __init__(self, seed: Optional[float] = None):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
         self.figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]), seed=seed)
@@ -23,35 +25,49 @@ class Game:
         self.slide_limit = FPS // 20
         self.slide_counter = 0
 
+        self.score = 0
+        self.level = 1
         self.burned_rows = 0
         self.is_burned = False
         self.game_over = False
 
     def update(self, dt: float):
         self.is_burned = False
+        current_burned_rows = 0
+
         if self.key_space:
-            return self.figure_drop()
-
-        dx = (self.key_right - self.key_left)
-        dy = dt * self.speed * self.speed_multiplier
-        if dy > 1:
-            dy = 1
-
-        self.slide_counter += self.key_right or self.key_left
-        if (self.slide_counter == self.slide_limit and
-                not (self.check_collision(Point(dx, 0), self.figure.orientation))):
-            self.slide_counter = 0
-            delta = Point(dx, dy)
-        else:
-            delta = Point(0, dy)
-
-        if self.check_collision(delta, self.figure.orientation):
-            self.freeze_figure()
+            self.figure_drop()
+            current_burned_rows = self.freeze_figure()
             self.update_shadow()
-        else:
-            self.figure.move(delta)
-            if delta.x:
+
+        if not self.key_space:
+            dx = (self.key_right - self.key_left)
+            dy = dt * self.speed * self.speed_multiplier
+            if dy > 1:
+                dy = 1
+
+            self.slide_counter += self.key_right or self.key_left
+            if (self.slide_counter == self.slide_limit and
+                    not (self.check_collision(Point(dx, 0), self.figure.orientation))):
+                self.slide_counter = 0
+                delta = Point(dx, dy)
+            else:
+                delta = Point(0, dy)
+
+            if self.check_collision(delta, self.figure.orientation):
+                current_burned_rows = self.freeze_figure()
                 self.update_shadow()
+            else:
+                self.figure.move(delta)
+                if delta.x:
+                    self.update_shadow()
+
+        if current_burned_rows:
+            self.is_burned = True
+            self.burned_rows += current_burned_rows
+            self.update_level()
+            self.update_speed()
+            self.update_burned_score(current_burned_rows)
 
     def keyboard_input(self, event):
         if event.type == pygame.KEYDOWN:
@@ -100,13 +116,6 @@ class Game:
                 self.game_over = True
                 break
         self.figure.refresh()
-        if burned_rows:
-            self.is_burned = True
-            print('++')
-            self.burned_rows += burned_rows
-            print('Burned rows total: ', self.burned_rows)
-            self.speed = FALLINGSPEED * (self.burned_rows // 10 + 1)
-            print('Current speed: ', self.speed * 1000)
 
         self.field_updated = True
         return burned_rows
@@ -144,8 +153,6 @@ class Game:
        
     def figure_drop(self):
         self.figure.move(Point(0, self.figure.shadow_position.y - self.figure.position.y))
-        self.freeze_figure()
-        self.update_shadow()
         self.key_space = False
 
     def update_shadow(self):
@@ -154,6 +161,15 @@ class Game:
             if self.check_collision(delta, self.figure.orientation):
                 self.figure.shadow_position = Point(self.figure.position.x, field_y - 1)
                 break
+
+    def update_level(self):
+        self.level = self.burned_rows // 12 + 1
+
+    def update_burned_score(self, burned_rows: int):
+        self.score += Game.scores[burned_rows - 1] * self.level
+
+    def update_speed(self):
+        self.speed = FALLINGSPEED * self.level
 
     def dump(self):
         return GameDataContainer(game=self)
