@@ -176,7 +176,7 @@ class Game:
         self.level = self.burned_rows_total // 12 + 1
 
     def update_burned_score(self, burned_rows: int):
-        self.score += Game.scores[burned_rows - 1] * self.level / 2
+        self.score += self.scores[burned_rows - 1] * self.level // 2
 
     def update_speed(self):
         self.speed = FALLINGSPEED + SPEED_INCREMENT * (self.level - 1)

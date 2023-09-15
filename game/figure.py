@@ -1,4 +1,4 @@
-import random as rnd
+import random
 from typing import Optional
 from .point import Point
 from .figures import *
@@ -15,7 +15,8 @@ class Figure:
     all_colors = (LIGHT_BLUE, BLUE, ORANGE, PINK, GREEN, RED, YELLOW)
 
     def __init__(self, default_position: Point, default_orientation: int = 0, seed: Optional[float] = None):
-        rnd.seed(seed)
+        self.rnd = random.Random()
+        self.rnd.seed(seed)
 
         self.default_position = default_position
         self.default_orientation = default_orientation
@@ -46,6 +47,6 @@ class Figure:
         self.shadow_position = self.default_shadow_position
         self.orientation = self.default_orientation
 
-        self.shape_variant = rnd.randrange(len(self.all_shapes))
+        self.shape_variant = self.rnd.randrange(len(self.all_shapes))
         self.shape = self.all_shapes[self.shape_variant]
         self.color = self.all_colors[self.shape_variant]
