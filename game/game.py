@@ -193,8 +193,15 @@ class GameDataContainer:
         self.figure_position = game.figure.position
         self.shadow_position = game.figure.shadow_position
         self.shape_variant = game.figure.shape_variant
+        self.next_shape_variant = game.figure.next_shape_variant
         self.orientation = game.figure.orientation
         self.field = None
         if game.is_field_updated:
             game.is_field_updated = False
             self.field = game.field.nodes
+
+        self.score = game.score
+        self.level = game.level
+        self.burned_rows_total = game.burned_rows_total
+        self.burned_rows = game.burned_rows
+        self.is_game_over = game.is_game_over

@@ -10,6 +10,7 @@ from game import GameDataContainer
 class GameFieldRenderer:
 
     block_image = pygame.image.load("resources/tetris_block.png")
+
     def __init__(self):
         self.game_surface: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
         self.field_surfaces: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
