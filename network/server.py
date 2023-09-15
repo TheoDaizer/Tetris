@@ -5,6 +5,8 @@ import pickle
 from game import Game
 from constants import IPV4
 
+from datetime import datetime
+
 server = IPV4
 port = 5555
 
