@@ -32,9 +32,8 @@ class Game:
         self.burned_rows = 0
         self.is_game_over = False
 
-    def update(self, dt: float):
+    def update(self, time_delta: float):
         print(self.score)
-
         self.burned_rows = 0
 
         if self.key_space:
@@ -43,9 +42,9 @@ class Game:
             self.burned_rows = self.freeze_figure()
             self.update_shadow()
 
-        if not self.key_space:
-            dx = (self.key_right - self.key_left)
-            dy = dt * self.speed * self.speed_multiplier
+        else:
+            dx = self.key_right - self.key_left
+            dy = time_delta * self.speed * self.speed_multiplier
             if dy > 1:
                 dy = 1
 
@@ -69,7 +68,6 @@ class Game:
                     self.update_shadow()
 
         if self.burned_rows:
-            self.burned_rows = True
             self.burned_rows_total += self.burned_rows
             self.update_level()
             self.update_speed()
@@ -144,7 +142,7 @@ class Game:
         return False
 
     def rotation_handler(self):
-        """If figure can rotate - rotates figure"""
+        """Rotate figure if possible"""
         orientation = (self.figure.orientation + 1) % len(self.figure.shape)
         delta = Point(0, 0)
 

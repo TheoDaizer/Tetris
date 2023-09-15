@@ -4,12 +4,13 @@ from pygame.event import Event
 
 from game import Game, GameFieldRenderer
 from constants import WINDOWWIDTH, WINDOWHEIGHT
-from containers import Container
+from containers import Container, GameSounds
 
 
-class HotSeatContainer(Container):
+class HotSeatContainer(Container, GameSounds):
     def __init__(self, window_surface):
         super().__init__(window_surface)
+        GameSounds.__init__(self)
 
         self.renderer_1 = GameFieldRenderer()
         self.renderer_2 = GameFieldRenderer()
@@ -19,19 +20,6 @@ class HotSeatContainer(Container):
 
         self.hs_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.hs_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
-
-        self.freeze_sound = pygame.mixer.Sound('resources/sfx-1.mp3')
-        self.freeze_sound.set_volume(0.5)
-
-        self.burn_sound = pygame.mixer.Sound('resources/sfx-2.mp3')
-        self.burn_sound.set_volume(0.5)
-
-        self.game_over = pygame.mixer.Sound('resources/game-over.mp3')
-        self.game_over.set_volume(0.1)
-
-        self.music = pygame.mixer.Sound('resources/8_bit_-_Korobejniki.mp3')
-        self.music.set_volume(0.5)
-        self.music.play(-1)
 
     @property
     def status(self):
@@ -108,7 +96,9 @@ class HotSeatContainer(Container):
         self.window_surface.blit(self.hs_surface, (0, 0))
 
     def sfx_play(self):
-        if self.game_1.burned_rows or self.game_2.burned_rows:
+        if self.game_1.burned_rows == 4 or self.game_2.burned_rows == 4:
             self.burn_sound.play()
+        elif self.game_1.burned_rows or self.game_2.burned_rows:
+            self.burn_tetris.play()
         else:
             self.freeze_sound.play()
