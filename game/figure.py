@@ -24,10 +24,11 @@ class Figure:
 
         self.position = None
         self.orientation = None
-        self.shadow_position = None
         self.shape_variant = None
-        self.color = None
-        self.shape = None
+
+        self.shadow_position = None
+
+        self.next_shape_variant = self.rnd.randrange(len(self.all_shapes))
 
         self.refresh()
 
@@ -35,6 +36,22 @@ class Figure:
     def shape_position(position: Point, shape_variant: int, orientation: int):
         shape = Figure.all_shapes[shape_variant][orientation]
         return [Point(position.x + pt.x, position.y + pt.y) for pt in shape]
+
+    @property
+    def shape(self):
+        return self.all_shapes[self.shape_variant]
+
+    @property
+    def next_shape(self):
+        return self.all_shapes[self.next_shape_variant]
+
+    @property
+    def color(self):
+        return self.all_colors[self.shape_variant]
+
+    @property
+    def next_color(self):
+        return self.all_colors[self.next_shape_variant]
 
     def rotate(self):
         self.orientation = (self.orientation + 1) % len(self.shape)
@@ -47,6 +64,5 @@ class Figure:
         self.shadow_position = self.default_shadow_position
         self.orientation = self.default_orientation
 
-        self.shape_variant = self.rnd.randrange(len(self.all_shapes))
-        self.shape = self.all_shapes[self.shape_variant]
-        self.color = self.all_colors[self.shape_variant]
+        self.shape_variant = self.next_shape_variant
+        self.next_shape_variant = self.rnd.randrange(len(self.all_shapes))

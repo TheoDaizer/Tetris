@@ -13,7 +13,6 @@ class Game:
     def __init__(self, seed: Optional[float] = None):
         self.field = Field(GRIDWIDTH, GRIDHEIGHT)
         self.figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]), seed=seed)
-        self.next_figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]), seed=seed)
         self.speed = FALLINGSPEED
         self.speed_multiplier = 1
         self.is_field_updated = False
@@ -122,8 +121,7 @@ class Game:
             pos = pt + self.figure.position
             if pos.y == 0 and not burned_rows:
                 return self.game_over()
-        self.figure = self.next_figure
-        self.next_figure.refresh()
+        self.figure.refresh()
 
         self.is_field_updated = True
         return burned_rows
