@@ -32,7 +32,7 @@ class SinglePlayerContainer(Container):
 
     @property
     def status(self):
-        if self.game.game_over:
+        if self.game.is_game_over:
             self.music.stop()
             self.game_over.play()
             return 'menu'
@@ -61,7 +61,7 @@ class SinglePlayerContainer(Container):
 
     def update(self, time_delta: float):
         self.game.update(time_delta)
-        if self.game.field_updated:
+        if self.game.is_field_updated:
             self.sfx_play()
 
     def render(self):
@@ -72,7 +72,7 @@ class SinglePlayerContainer(Container):
         self.window_surface.blit(self.sp_surface, (0, 0))
 
     def sfx_play(self):
-        if self.game.is_burned:
+        if self.game.burned_rows:
             self.burn_sound.play()
         else:
             self.freeze_sound.play()

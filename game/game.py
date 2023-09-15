@@ -16,7 +16,7 @@ class Game:
         self.next_figure = Figure(default_position=Point(STARTING_POSITION[0], STARTING_POSITION[1]), seed=seed)
         self.speed = FALLINGSPEED
         self.speed_multiplier = 1
-        self.field_updated = False
+        self.is_field_updated = False
 
         self.key_left = False
         self.key_right = False
@@ -28,20 +28,19 @@ class Game:
 
         self.score = 0
         self.level = 1
+        self.burned_rows_total = 0
         self.burned_rows = 0
-        self.is_burned = False
-        self.game_over = False
+        self.is_game_over = False
 
     def update(self, dt: float):
         print(self.score)
 
-        self.is_burned = False
-        current_burned_rows = 0
+        self.burned_rows = 0
 
         if self.key_space:
             dropped_y = self.figure_drop()
             self.score += int(dropped_y) * 2
-            current_burned_rows = self.freeze_figure()
+            self.burned_rows = self.freeze_figure()
             self.update_shadow()
 
         if not self.key_space:
@@ -59,7 +58,7 @@ class Game:
                 delta = Point(0, dy)
 
             if self.check_collision(delta, self.figure.orientation):
-                current_burned_rows = self.freeze_figure()
+                self.burned_rows = self.freeze_figure()
                 self.update_shadow()
             else:
                 last_pos_y = self.figure.position.y
@@ -69,12 +68,12 @@ class Game:
                 if delta.x:
                     self.update_shadow()
 
-        if current_burned_rows:
-            self.is_burned = True
-            self.burned_rows += current_burned_rows
+        if self.burned_rows:
+            self.burned_rows = True
+            self.burned_rows_total += self.burned_rows
             self.update_level()
             self.update_speed()
-            self.update_burned_score(current_burned_rows)
+            self.update_burned_score(self.burned_rows)
 
     def key_left_down(self):
         self.key_left = True
@@ -124,11 +123,11 @@ class Game:
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position
             if pos.y == 0 and not burned_rows:
-                return self.gabella()
+                return self.game_over()
         self.figure = self.next_figure
         self.next_figure.refresh()
 
-        self.field_updated = True
+        self.is_field_updated = True
         return burned_rows
 
     def check_collision(self, delta: Point, orientation: int):
@@ -176,7 +175,7 @@ class Game:
                 break
 
     def update_level(self):
-        self.level = self.burned_rows // 12 + 1
+        self.level = self.burned_rows_total // 12 + 1
 
     def update_burned_score(self, burned_rows: int):
         self.score += Game.scores[burned_rows - 1] * self.level / 2
@@ -187,10 +186,10 @@ class Game:
     def dump(self):
         return GameDataContainer(game=self)
 
-    def gabella(self):
-        self.game_over = True
-        self.field_updated = False
-        self.is_burned = False
+    def game_over(self):
+        self.is_game_over = True
+        self.is_field_updated = False
+        self.burned_rows = 0
 
 
 class GameDataContainer:
@@ -200,6 +199,6 @@ class GameDataContainer:
         self.shape_variant = game.figure.shape_variant
         self.orientation = game.figure.orientation
         self.field = None
-        if game.field_updated:
-            game.field_updated = False
+        if game.is_field_updated:
+            game.is_field_updated = False
             self.field = game.field.nodes
