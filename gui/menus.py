@@ -54,6 +54,7 @@ class MultiplayerMenu(Menu):
 
     def process_events(self, event: Event):
         if event.ui_element == self.buttons.start_server_button:
+            self._new_container = 'mp'
             return self
 
         if event.ui_element == self.buttons.start_multiplayer_button:

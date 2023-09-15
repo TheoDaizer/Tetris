@@ -18,7 +18,7 @@ class Network:
     def connect(self):
         try:
             self.client.connect(self.addr)
-            return pickle.loads(self.client.recv(4096))
+            return pickle.loads(self.client.recv(1024 * 8))
 
         # TODO эескпт без типа ошибки - шляпа
         except:

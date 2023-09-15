@@ -21,10 +21,13 @@ s.listen(2)
 print('Waiting for connection, Server Started')
 
 containers = [None, None]
+currentPlayer = 0
+seed = datetime.now().timestamp()
 
 
 def threaded_client(conn, player):
-    conn.sendall(pickle.dumps(Game()))
+
+    conn.sendall(pickle.dumps(Game(seed)))
 
     while True:
         try:
@@ -47,15 +50,17 @@ def threaded_client(conn, player):
         except:
             break
 
-    print('Lost connection')
     conn.close()
+    global currentPlayer
+    currentPlayer -= 1
+    print('Lost connection')
+    print(f'Connections: {currentPlayer}')
 
-
-currentPlayer = 0
 
 while True:
     conn, addr = s.accept()
-    print("Connected to:", addr)
 
     start_new_thread(threaded_client, (conn, currentPlayer))
     currentPlayer += 1
+    print("Connected to:", addr)
+    print(f'Connections: {currentPlayer}')

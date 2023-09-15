@@ -19,4 +19,3 @@ class GameSounds(ABC):
 
         self.music = pygame.mixer.Sound('resources/8_bit_-_Korobejniki.mp3')
         self.music.set_volume(0.5)
-        self.music.play(-1)

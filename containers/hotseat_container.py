@@ -13,6 +13,7 @@ class HotSeatContainer(Container, GameSounds):
     def __init__(self, window_surface):
         super().__init__(window_surface)
         GameSounds.__init__(self)
+        self.music.play(-1)
 
         self.renderer_1 = GameFieldRenderer()
         self.renderer_2 = GameFieldRenderer()
