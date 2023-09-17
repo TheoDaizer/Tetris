@@ -3,7 +3,6 @@ from _thread import start_new_thread
 import pickle
 
 from constants import IPV4
-
 from datetime import datetime
 
 server = IPV4
@@ -30,21 +29,23 @@ def threaded_client(conn, player):
 
     while True:
         try:
-            data = pickle.loads(conn.recv(8192))
-            containers[player] = data
+            data = pickle.loads(conn.recv(8192*2))
+            if containers[player]:
+                containers[player].update(data)
+            else:
+                containers[player] = data
 
             if not data:
                 print("Disconnected")
                 break
             else:
-                if player == 0:
-                    reply = containers[1]
-                else:
-                    reply = containers[0]
+                reply_index = (1, 0)[player]
+                reply = containers[reply_index]
                 print('Received: ', data)
                 print('Sending: ', reply)
 
             conn.sendall(pickle.dumps(reply))
+            containers[reply_index] = {}
         # TODO эескпт без типа ошибки - шляпа
         except:
             break
