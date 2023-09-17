@@ -1,6 +1,6 @@
-WINDOWWIDTH = 1200
+WINDOWWIDTH = 600
 WINDOWHEIGHT = 800
-BACKGROUNDPATH = "resources/background3.jpg"
+BACKGROUNDPATH = "resources/background2.jpg"
 TILESIZE = 32  # Tile size in pixels
 
 # Game field(grid) size in tiles
