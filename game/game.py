@@ -21,6 +21,7 @@ class Game:
         self.key_right = False
         self.key_space = False
         self.key_down = False
+        self.key_up = False
 
         self.slide_limit = FPS // 20
         self.slide_counter = 0
@@ -32,8 +33,12 @@ class Game:
         self.is_game_over = False
 
     def update(self, time_delta: float):
-        print(self.score)
         self.burned_rows = 0
+
+        if self.key_up:
+            self.rotation_handler()
+            self.update_shadow()
+            self.key_up = False
 
         if self.key_space:
             dropped_y = self.figure_drop()
@@ -48,9 +53,10 @@ class Game:
                 dy = 1
 
             self.slide_counter += self.key_right or self.key_left
-            if (self.slide_counter == self.slide_limit and
+            if ((self.slide_counter == self.slide_limit or self.slide_counter == - FPS // 8 + 1) and
                     not (self.check_collision(Point(dx, 0), self.figure.orientation))):
-                self.slide_counter = 0
+                if self.slide_counter == self.slide_limit:
+                    self.slide_counter = 0
                 delta = Point(dx, dy)
             else:
                 delta = Point(0, dy)
@@ -75,10 +81,6 @@ class Game:
     def key_left_down(self):
         self.key_left = True
         self.slide_counter = - FPS // 8
-        delta = Point(-1, 0)
-        if not (self.check_collision(delta, self.figure.orientation)):
-            self.figure.move(delta)
-            self.update_shadow()
 
     def key_left_up(self):
         self.key_left = False
@@ -87,18 +89,13 @@ class Game:
     def key_right_down(self):
         self.key_right = True
         self.slide_counter = - FPS // 8
-        delta = Point(1, 0)
-        if not (self.check_collision(delta, self.figure.orientation)):
-            self.figure.move(delta)
-            self.update_shadow()
 
     def key_right_up(self):
         self.key_right = False
         self.slide_counter = 0
 
     def key_up_down(self):
-        self.rotation_handler()
-        self.update_shadow()
+        self.key_up = True
 
     def key_down_down(self):
         self.key_down = True
