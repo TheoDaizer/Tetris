@@ -8,6 +8,9 @@ from game import GameDataContainer
 
 
 class GameFieldRenderer:
+
+    block_image = pygame.image.load("resources/tetris_block.png")
+
     def __init__(self):
         self.game_surface: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
         self.field_surfaces: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
@@ -15,8 +18,6 @@ class GameFieldRenderer:
 
         self.grid_surface = pygame.Surface((FIELDWIDTH, FIELDHEIGHT), pygame.SRCALPHA)
         self.draw_grid()
-
-        self.block_image = pygame.image.load("resources/tetris_block.png")
 
     def draw_grid(self):
         self.grid_surface.fill((0, 0, 0, 0))
@@ -28,7 +29,10 @@ class GameFieldRenderer:
         """Main rendering function, that call other renderers"""
         if game_data.field is not None:
             self.render_field(game_data.field)
-        self.render_figure(game_data.figure_position, game_data.shadow_position,
+        self.figure_surfaces.blit(self.field_surfaces, (0, 0))
+        self.render_shadow(self.figure_surfaces, game_data.shadow_position,
+                           game_data.shape_variant, game_data.orientation)
+        self.render_figure(self.figure_surfaces, game_data.figure_position,
                            game_data.shape_variant, game_data.orientation)
 
         return self.render_game_screen()
@@ -43,22 +47,26 @@ class GameFieldRenderer:
                 pygame.draw.rect(self.field_surfaces, field[y][x], r, 0)
                 self.field_surfaces.blit(self.block_image, (x * TILESIZE, y * TILESIZE))
 
-    def render_figure(self, figure_position: Point, shadow_position: Point, shape_variant: int, orientation: int):
+    @staticmethod
+    def render_shadow(surface, shadow_position: Point, shape_variant: int, orientation: int):
         """Rendering figure with filled rectangles of figure's color"""
-        self.figure_surfaces.blit(self.field_surfaces, (0, 0))
 
         for pt in Figure.shape_position(shadow_position, shape_variant, orientation):
             shadow_rect = pygame.Rect(
                 int(pt.x) * TILESIZE + 1, int(pt.y) * TILESIZE + 1,
                 TILESIZE - 2, TILESIZE - 2)
-            pygame.draw.rect(self.figure_surfaces, (200, 200, 200), shadow_rect, 2)
+            pygame.draw.rect(surface, (200, 200, 200), shadow_rect, 2)
+
+    @staticmethod
+    def render_figure(surface, figure_position: Point, shape_variant: int, orientation: int):
+        """Rendering figure with filled rectangles of figure's color"""
 
         for pt in Figure.shape_position(figure_position, shape_variant, orientation):
             figure_rect = pygame.Rect(
                 int(pt.x) * TILESIZE, int(pt.y) * TILESIZE,
                 TILESIZE, TILESIZE)
-            pygame.draw.rect(self.figure_surfaces, Figure.all_colors[shape_variant], figure_rect, 0)
-            self.figure_surfaces.blit(self.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
+            pygame.draw.rect(surface, Figure.all_colors[shape_variant], figure_rect, 0)
+            surface.blit(GameFieldRenderer.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
 
     def render_game_screen(self):
         self.game_surface.blit(self.figure_surfaces, (0, 0))

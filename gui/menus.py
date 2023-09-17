@@ -57,6 +57,7 @@ class MultiplayerMenu(Menu):
             return self
 
         if event.ui_element == self.buttons.start_multiplayer_button:
+            self._new_container = 'hs'
             return self
 
         if event.ui_element == self.buttons.mp_btm_button:

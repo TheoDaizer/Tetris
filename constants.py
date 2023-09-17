@@ -14,6 +14,7 @@ FIELDHEIGHT = GRIDHEIGHT * TILESIZE  # Game window height in pixels
 FPS = 60  # game speed is fixed to 60 frames per second
 
 FALLINGSPEED = 0.001     # figure falling speed in plying field's cell per millisecond (cell/ms)
+SPEED_INCREMENT = 0.0005  # speed increment for level progression
 SPEEDMULTIPLIER = 20  # accelerated figure falling speed (cell/ms)
 
 STARTING_POSITION = (4, 0)  # figure spawn position

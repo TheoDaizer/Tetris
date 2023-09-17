@@ -4,13 +4,15 @@ from pygame.surface import Surface
 from pygame.event import Event
 
 from game import Game, GameFieldRenderer
+from containers import Container, GameSounds
 from constants import WINDOWWIDTH, WINDOWHEIGHT, BACKGROUNDPATH
 from containers import Container
 
 
-class SinglePlayerContainer(Container):
+class SinglePlayerContainer(Container, GameSounds):
     def __init__(self, window_surface):
         super().__init__(window_surface)
+        GameSounds.__init__(self)
 
         self.renderer = GameFieldRenderer()
         self.game = Game()
@@ -59,7 +61,7 @@ class SinglePlayerContainer(Container):
 
     @property
     def status(self):
-        if self.game.game_over:
+        if self.game.is_game_over:
             self.music.stop()
             self.game_over.play()
             return 'menu'
@@ -105,24 +107,27 @@ class SinglePlayerContainer(Container):
                 return 'menu'
 
     def update(self, time_delta: float):
+        self.game.update(time_delta)
         if self.pause_state == False:
             self.game.update(time_delta)
             self.manager.update(time_delta)
-            if self.game.field_updated:
+            if self.game.is_field_updated:
                 self.sfx_play()
         else:
             self.manager.update(time_delta)
 
     def render(self):
-        player = self.game.dump()
-        game_field_surface = self.renderer.render(player)
+        game_data = self.game.dump()
+        game_field_surface = self.renderer.render(game_data)
         self.sp_surface.blit(game_field_surface, (self.gamefield_pos_x, self.gamefield_pos_y))
         self.manager.draw_ui(self.sp_surface)
 
         self.window_surface.blit(self.sp_surface, (0, 0))
 
     def sfx_play(self):
-        if self.game.is_burned:
+        if self.game.burned_rows == 4:
+            self.burn_tetris.play()
+        elif self.game.burned_rows:
             self.burn_sound.play()
         else:
             self.freeze_sound.play()
