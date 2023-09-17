@@ -2,7 +2,6 @@ import socket
 from _thread import start_new_thread
 import pickle
 
-from game import Game
 from constants import IPV4
 
 from datetime import datetime
@@ -27,11 +26,11 @@ seed = datetime.now().timestamp()
 
 def threaded_client(conn, player):
 
-    conn.sendall(pickle.dumps(Game(seed)))
+    conn.sendall(pickle.dumps(seed))
 
     while True:
         try:
-            data = pickle.loads(conn.recv(1024))
+            data = pickle.loads(conn.recv(8192))
             containers[player] = data
 
             if not data:

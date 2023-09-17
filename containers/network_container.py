@@ -21,7 +21,7 @@ class NetworkContainer(Container, GameSounds):
         self.renderer_2 = GameFieldRenderer()
 
         self.network = Network()
-        self.game: Game = self.network.get_game()
+        self.game: Game = Game(self.network.get_game())
 
         self.game_1: GameDataContainer = self.game.dump()
         self.game_2: Optional[GameDataContainer] = self.network.send(self.game_1)
