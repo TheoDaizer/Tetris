@@ -68,16 +68,6 @@ class GameFieldRenderer:
             pygame.draw.rect(surface, Figure.all_colors[shape_variant], figure_rect, 0)
             surface.blit(GameFieldRenderer.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
 
-    @staticmethod
-    def render_figure_box(surface, figure_position: Point, shape_variant: int, orientation: int):
-        """Rendering figure with filled rectangles of figure's color"""
-
-        for pt in Figure.shape_position(figure_position, shape_variant, orientation):
-            figure_rect = pygame.Rect(
-                int(pt.x) * TILESIZE, int(pt.y) * TILESIZE,
-                TILESIZE, TILESIZE)
-            pygame.draw.rect(surface, Figure.all_colors[shape_variant], figure_rect, 0)
-            surface.blit(GameFieldRenderer.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
 
     def render_game_screen(self):
         self.game_surface.blit(self.figure_surfaces, (0, 0))
