@@ -25,11 +25,11 @@ class Field:
 
         return self.check_row()
 
-    def check_row(self) -> int:
-        burned_rows = 0
+    def check_row(self) -> list:
+        burned_rows = []
         for row_n in range(self.height):
             if self.rows_counter[row_n] == self.width:
-                burned_rows += 1
+                burned_rows.append(row_n)
                 self.rows_counter[row_n] = 0
                 self.remove_row(row_n)
         return burned_rows

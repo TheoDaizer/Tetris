@@ -13,12 +13,14 @@ SHADOW_COLOR = "lightcoral"
 class GameFieldRenderer:
 
     block_image = pygame.image.load("resources/tetris_block.png")
+    burn_animation = pygame.image.load("resources/explosion_pixelfied.png")
 
     def __init__(self):
         self.game_surface: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
         self.field_surfaces: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
         self.figure_surfaces: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
         self.field_surfaces: Surface = Surface((FIELDWIDTH, FIELDHEIGHT), pygame.SRCALPHA)
+        self.animations_surfaces: Surface = Surface((FIELDWIDTH, FIELDHEIGHT), pygame.SRCALPHA)
 
         self.grid_surface = pygame.Surface((FIELDWIDTH, FIELDHEIGHT), pygame.SRCALPHA)
         self.draw_grid()
@@ -26,6 +28,11 @@ class GameFieldRenderer:
         self.game_surface.fill(BG_COLOR)
         self.figure_surfaces.fill(BG_COLOR)
         self.field_surfaces.fill((0, 0, 0, 0))
+
+        self.burn_frames = []
+        for i in range(16):
+            r = pygame.Rect(i % 4 * TILESIZE, i // 4 * TILESIZE, TILESIZE, TILESIZE)
+            self.burn_frames.append(self.burn_animation.subsurface(r))
 
     def draw_grid(self):
         self.grid_surface.fill((255, 255, 255, 0))
@@ -49,7 +56,7 @@ class GameFieldRenderer:
         if game_data.field is not None:
             self.render_field(game_data.field)
 
-        return self.render_game_screen()
+        return self.render_game_screen(game_data)
 
     def render_field(self, field):
         """Rendering game grid with no fill rectangles"""
@@ -82,7 +89,14 @@ class GameFieldRenderer:
             pygame.draw.rect(surface, Figure.all_colors[shape_variant], figure_rect, 0)
             surface.blit(GameFieldRenderer.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
 
-    def render_game_screen(self):
+    def render_game_screen(self, game_data):
         self.game_surface.blit(self.field_surfaces, (0, 0))
         self.game_surface.blit(self.grid_surface, (0, 0))
+
+        self.animations_surfaces.fill((0, 0, 0, 0))
+        for animation in game_data.active_animations:
+            for column in range(GRIDWIDTH):
+                self.animations_surfaces.blit(self.burn_frames[animation[0].frame], (column * TILESIZE, animation[1] * TILESIZE))
+        self.game_surface.blit(self.animations_surfaces, (0, 0))
+
         return self.game_surface
