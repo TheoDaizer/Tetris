@@ -15,12 +15,7 @@ SHADOW_COLOR = "lightcoral"
 class GameFieldRenderer:
 
     block_image = pygame.image.load("resources/tetris_block.png")
-    # burn_animation = pygame.image.load("resources/explosion_pixelfied.png")
-    #
-    # burn_frames = []
-    # for i in range(16):
-    #     r = pygame.Rect(i % 4 * TILESIZE, i // 4 * TILESIZE, TILESIZE, TILESIZE)
-    #     burn_frames.append(burn_animation.subsurface(r))
+    bg_image = pygame.image.load("resources/background_col.png")
 
     def __init__(self):
         self.game_surface: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
@@ -32,20 +27,27 @@ class GameFieldRenderer:
         self.grid_surface = pygame.Surface((FIELDWIDTH, FIELDHEIGHT), pygame.SRCALPHA)
         self.draw_grid()
 
-        self.game_surface.fill(BG_COLOR)
-        self.figure_surfaces.fill(BG_COLOR)
+        self.game_surface.blit(self.bg_image, (0, 0))
+        #self.game_surface.fill(BG_COLOR)
+        self.figure_surfaces.blit(self.bg_image, (0, 0))
+        #self.figure_surfaces.fill(BG_COLOR)
         self.field_surfaces.fill((0, 0, 0, 0))
 
     def draw_grid(self):
         self.grid_surface.fill((255, 255, 255, 0))
         for x, y in ((x, y) for y in range(GRIDHEIGHT) for x in range(GRIDWIDTH)):
-            r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
-            pygame.draw.rect(self.grid_surface, GRID_COLOR, r, 1)
+            #r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
+            #pygame.draw.rect(self.grid_surface, GRID_COLOR, r, 1)
+            pygame.draw.line(self.grid_surface, GRID_COLOR, (x * TILESIZE, y * TILESIZE),
+                             (x * TILESIZE, (y + 1) * TILESIZE))
+            pygame.draw.line(self.grid_surface, GRID_COLOR, (x * TILESIZE, y * TILESIZE),
+                             ((x + 1) * TILESIZE, y * TILESIZE))
 
     def render(self, game_data: GameDataContainer):
         """Main rendering function, that call other renderers"""
 
-        self.figure_surfaces.fill(BG_COLOR)  # "clearing screen" by filling it with one color
+        #self.figure_surfaces.fill(BG_COLOR)  # "clearing screen" by filling it with one color
+        self.figure_surfaces.blit(self.bg_image, (0, 0))
 
         self.render_shadow(self.figure_surfaces, game_data.shadow_position,
                            game_data.shape_variant, game_data.orientation)
@@ -92,8 +94,8 @@ class GameFieldRenderer:
             surface.blit(GameFieldRenderer.block_image, (int(pt.x) * TILESIZE, int(pt.y) * TILESIZE))
 
     def render_game_screen(self, game_data):
+        #self.game_surface.blit(self.grid_surface, (0, 0))
         self.game_surface.blit(self.field_surfaces, (0, 0))
-        self.game_surface.blit(self.grid_surface, (0, 0))
 
         self.animations_surfaces.fill((0, 0, 0, 0))
         for animation in game_data.active_animations:
