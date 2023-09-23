@@ -4,8 +4,10 @@ from .figure import Figure
 from .point import Point
 
 from constants import TILESIZE, FIELDWIDTH, FIELDHEIGHT, GRIDHEIGHT, GRIDWIDTH
-from game import GameDataContainer
+from .game import GameDataContainer
+from .animation import Animation
 
+GRID_COLOR = (100, 100, 100)
 BG_COLOR = "lightskyblue1"
 SHADOW_COLOR = "lightcoral"
 
@@ -13,7 +15,12 @@ SHADOW_COLOR = "lightcoral"
 class GameFieldRenderer:
 
     block_image = pygame.image.load("resources/tetris_block.png")
-    burn_animation = pygame.image.load("resources/explosion_pixelfied.png")
+    # burn_animation = pygame.image.load("resources/explosion_pixelfied.png")
+    #
+    # burn_frames = []
+    # for i in range(16):
+    #     r = pygame.Rect(i % 4 * TILESIZE, i // 4 * TILESIZE, TILESIZE, TILESIZE)
+    #     burn_frames.append(burn_animation.subsurface(r))
 
     def __init__(self):
         self.game_surface: Surface = Surface((FIELDWIDTH, FIELDHEIGHT))
@@ -29,16 +36,11 @@ class GameFieldRenderer:
         self.figure_surfaces.fill(BG_COLOR)
         self.field_surfaces.fill((0, 0, 0, 0))
 
-        self.burn_frames = []
-        for i in range(16):
-            r = pygame.Rect(i % 4 * TILESIZE, i // 4 * TILESIZE, TILESIZE, TILESIZE)
-            self.burn_frames.append(self.burn_animation.subsurface(r))
-
     def draw_grid(self):
         self.grid_surface.fill((255, 255, 255, 0))
         for x, y in ((x, y) for y in range(GRIDHEIGHT) for x in range(GRIDWIDTH)):
             r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
-            pygame.draw.rect(self.grid_surface, (100, 100, 100), r, 1)
+            pygame.draw.rect(self.grid_surface, GRID_COLOR, r, 1)
 
     def render(self, game_data: GameDataContainer):
         """Main rendering function, that call other renderers"""
@@ -95,8 +97,9 @@ class GameFieldRenderer:
 
         self.animations_surfaces.fill((0, 0, 0, 0))
         for animation in game_data.active_animations:
-            for column in range(GRIDWIDTH):
-                self.animations_surfaces.blit(self.burn_frames[animation[0].frame], (column * TILESIZE, animation[1] * TILESIZE))
+            self.animations_surfaces.blit(Animation.frames_container[animation[0].animation_type][animation[0].frame],
+                                          (animation[1][0] * TILESIZE, animation[1][1] * TILESIZE))
+
         self.game_surface.blit(self.animations_surfaces, (0, 0))
 
         return self.game_surface

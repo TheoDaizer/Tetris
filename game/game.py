@@ -4,7 +4,8 @@ from constants import FALLINGSPEED, SPEED_INCREMENT, SPEEDMULTIPLIER, GRIDWIDTH,
 from .field import Field
 from .figure import Figure
 from .point import Point
-from .animation_handler import Animation
+from .animation import Animation
+from .animation import AnimationType
 
 
 class Game:
@@ -85,7 +86,6 @@ class Game:
             if not animation[0].update(time_delta):
                 self.active_animations.remove(animation)
 
-
     def key_left_down(self):
         self.key_left = True
         self.slide_counter = - FPS // 8
@@ -129,7 +129,10 @@ class Game:
         self.figure.refresh()
 
         for row in burned_rows_pos:
-            self.active_animations.append((Animation(), row))
+            for column in range(GRIDWIDTH):
+                self.active_animations.append((Animation(AnimationType.BURN_ANIMATION,
+                                                         len(Animation.frames_container[AnimationType.BURN_ANIMATION])),
+                                               (column, row)))
 
         self.is_field_updated = True
         return burned_rows
