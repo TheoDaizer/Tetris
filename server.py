@@ -26,26 +26,22 @@ seed = datetime.now().timestamp()
 def threaded_client(conn, player):
 
     conn.sendall(pickle.dumps(seed))
-
+    reply_index = (1, 0)[player]
     while True:
         try:
-            data = pickle.loads(conn.recv(8192*2))
-            if containers[player]:
-                containers[player].update(data)
-            else:
-                containers[player] = data
+            data = pickle.loads(conn.recv(4096))
 
             if not data:
                 print("Disconnected")
                 break
             else:
-                reply_index = (1, 0)[player]
+                containers[player] = data
                 reply = containers[reply_index]
-                print('Received: ', data)
-                print('Sending: ', reply)
+                # print('Received: ', data)
+                # print('Sending: ', reply)
 
             conn.sendall(pickle.dumps(reply))
-            containers[reply_index] = {}
+
         # TODO эескпт без типа ошибки - шляпа
         except:
             break

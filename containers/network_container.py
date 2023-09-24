@@ -1,14 +1,16 @@
+from typing import Optional
+
 import pygame
 from pygame.surface import Surface
 from pygame.event import Event
 
-from game import Game, GameFieldRenderer
-from constants import WINDOWWIDTH, WINDOWHEIGHT
+from game import Game, GameDataContainer, GameFieldRenderer
+from constants import WINDOWWIDTH, WINDOWHEIGHT, FPS
 from containers import Container, GameSounds
 
+from _thread import start_new_thread
 from network import Network
-
-from queue import Queue
+from time import sleep
 
 
 class NetworkContainer(Container, GameSounds):
@@ -23,12 +25,12 @@ class NetworkContainer(Container, GameSounds):
         self.renderer_1 = GameFieldRenderer()
         self.renderer_2 = GameFieldRenderer()
 
-        self.game_1: Game = Game(seed)
-        self.game_2: Game = Game(seed)
+        self.game: Game = Game(seed)
+        self.game_1: GameDataContainer = self.game.dump()
+        self.game_2: Optional[GameDataContainer] = None
+        start_new_thread(self.__update_game_2, tuple())
 
         self.input_mask = 0
-        self.game_1_buffer = {}
-        self.game_2_buffer = None
 
         self.mp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.mp_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
@@ -37,7 +39,7 @@ class NetworkContainer(Container, GameSounds):
 
     @property
     def status(self):
-        if self.game_1.is_game_over and self.game_2.is_game_over:
+        if self.game.is_game_over and self.game_2.is_game_over:
             self.music.stop()
             self.game_over.play()
             return 'menu'
@@ -48,56 +50,56 @@ class NetworkContainer(Container, GameSounds):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 self.input_mask ^= 1
-                self.game_1.key_left_down()
+                self.game.key_left_down()
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 self.input_mask ^= 2
-                self.game_1.key_right_down()
+                self.game.key_right_down()
             if event.key == pygame.K_UP or event.key == pygame.K_w:
                 self.input_mask ^= 4
-                self.game_1.key_up_down()
+                self.game.key_up_down()
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.input_mask ^= 8
-                self.game_1.key_down_down()
+                self.game.key_down_down()
             if event.key == pygame.K_SPACE:
                 self.input_mask ^= 16
-                self.game_1.key_space_down()
+                self.game.key_space_down()
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 self.input_mask ^= 16
-                self.game_1.key_down_up()
+                self.game.key_down_up()
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 self.input_mask ^= 32
-                self.game_1.key_left_up()
+                self.game.key_left_up()
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 self.input_mask ^= 64
-                self.game_1.key_right_up()
+                self.game.key_right_up()
+
+    def __update_game_2(self):
+        sleep_time = 0.5 / FPS
+        while True:
+            self.game_2 = self.network.send(self.game_1)
+            sleep(sleep_time)
 
     def update(self, time_delta: float):
-        if self.game_2_buffer is None:
-            self.game_2_buffer = self.network.send(self.game_1_buffer)
+        if self.game_2 is None:
             return
 
-        if not self.game_1.is_game_over:
-            self.game_1.update(time_delta)
+        if not self.game.is_game_over:
+            self.game.update(time_delta)
 
-        if not self.game_2.is_game_over:
-            self.game_2.update()
-
-        if self.game_1.is_field_updated or self.game_2.is_field_updated:
+        if self.game.is_field_updated:
             self.sfx_play()
 
-        self.game_2 = self.network.send(self.game_1_buffer)
-
-        if self.game_1.is_field_updated:
+        if self.game.is_field_updated:
             self.sfx_play()
 
     def render(self):
         if self.game_2 is None:
-            self.game_2 = self.network.send(self.game_1_buffer)
             return
-
+        print(self.game_2)
         if not self.game.is_game_over:
+            self.game_1 = self.game.dump()
             game_field_surface_1 = self.renderer_1.render(self.game_1)
             self.mp_surface.blit(game_field_surface_1, (0, 50))
 

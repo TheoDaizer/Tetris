@@ -3,6 +3,8 @@ import pickle
 
 from constants import IPV4
 
+from game import GameDataContainer
+
 
 class Network:
     def __init__(self):
@@ -24,9 +26,9 @@ class Network:
         except:
             pass
 
-    def send(self, data: dict) -> dict:
+    def send(self, data: GameDataContainer) -> GameDataContainer:
         try:
             self.client.send(pickle.dumps(data))
-            return pickle.loads(self.client.recv(8192*2))
+            return pickle.loads(self.client.recv(4096))
         except socket.error as e:
             print(e)
