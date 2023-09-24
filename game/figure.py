@@ -12,7 +12,7 @@ class Figure:
     tuple_shapes = (I_FORM, J_FORM, L_FORM, T_FORM, Z_FORM, S_FORM, O_FORM)
 
     all_shapes = [[[Point(pt[0], pt[1]) for pt in var] for var in shape] for shape in tuple_shapes]
-    all_colors = (LIGHT_BLUE, BLUE, ORANGE, PINK, GREEN, RED, YELLOW)
+    all_colors = (LIGHT_BLUE, BLUE, ORANGE, PURPLE, GREEN, RED, YELLOW)
 
     def __init__(self, default_position: Point, default_orientation: int = 0, seed: Optional[float] = None):
         self.rnd = random.Random()

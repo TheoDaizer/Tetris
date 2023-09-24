@@ -28,16 +28,12 @@ class GameFieldRenderer:
         self.draw_grid()
 
         self.game_surface.blit(self.bg_image, (0, 0))
-        #self.game_surface.fill(BG_COLOR)
         self.figure_surfaces.blit(self.bg_image, (0, 0))
-        #self.figure_surfaces.fill(BG_COLOR)
         self.field_surfaces.fill((0, 0, 0, 0))
 
     def draw_grid(self):
         self.grid_surface.fill((255, 255, 255, 0))
         for x, y in ((x, y) for y in range(GRIDHEIGHT) for x in range(GRIDWIDTH)):
-            #r = pygame.Rect(x * TILESIZE, y * TILESIZE, TILESIZE, TILESIZE)
-            #pygame.draw.rect(self.grid_surface, GRID_COLOR, r, 1)
             pygame.draw.line(self.grid_surface, GRID_COLOR, (x * TILESIZE, y * TILESIZE),
                              (x * TILESIZE, (y + 1) * TILESIZE))
             pygame.draw.line(self.grid_surface, GRID_COLOR, (x * TILESIZE, y * TILESIZE),
@@ -46,7 +42,6 @@ class GameFieldRenderer:
     def render(self, game_data: GameDataContainer):
         """Main rendering function, that call other renderers"""
 
-        #self.figure_surfaces.fill(BG_COLOR)  # "clearing screen" by filling it with one color
         self.figure_surfaces.blit(self.bg_image, (0, 0))
 
         self.render_shadow(self.figure_surfaces, game_data.shadow_position,
@@ -80,7 +75,7 @@ class GameFieldRenderer:
             shadow_rect = pygame.Rect(
                 int(pt.x) * TILESIZE + 1, int(pt.y) * TILESIZE + 1,
                 TILESIZE - 2, TILESIZE - 2)
-            pygame.draw.rect(surface, SHADOW_COLOR, shadow_rect, 2)
+            pygame.draw.rect(surface, Figure.all_colors[shape_variant], shadow_rect, 2)
 
     @staticmethod
     def render_figure(surface, figure_position: Point, shape_variant: int, orientation: int):

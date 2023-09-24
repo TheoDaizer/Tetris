@@ -2,7 +2,8 @@ import pygame
 from enum import IntEnum
 from constants import TILESIZE
 
-BURN_ANIMATION_SIZE = (4, 4)
+#BURN_ANIMATION_SIZE = (4, 4)
+BURN_ANIMATION_SIZE = (10, 2)
 
 
 class AnimationType(IntEnum):
@@ -12,16 +13,22 @@ class AnimationType(IntEnum):
 
 class Animation:
 
-    burn_animation = pygame.image.load("resources/explosion_pixelfied.png")
+    # burn_animation = pygame.image.load("resources/explosion_pixelfied.png")
+    burn_animation = pygame.image.load("resources/burn_animation.png")
 
     burn_frames = []
-    for i in range(16):
-        r = pygame.Rect(i % BURN_ANIMATION_SIZE[0] * TILESIZE, i // BURN_ANIMATION_SIZE[1] * TILESIZE, TILESIZE, TILESIZE)
+    #for i in range(16):
+    for i in range(17):
+        r = pygame.Rect((i % BURN_ANIMATION_SIZE[0]) * TILESIZE,
+                        (i // BURN_ANIMATION_SIZE[0]) * TILESIZE,
+                        TILESIZE,
+                        TILESIZE
+                        )
         burn_frames.append(burn_animation.subsurface(r))
 
     frames_container = (burn_frames, )
 
-    def __init__(self, animation_type: AnimationType, num_of_frames: int, update_time: int = 30):
+    def __init__(self, animation_type: AnimationType, num_of_frames: int, update_time: int = 15):
         self.animation_type = animation_type
 
         self.frame = 0
