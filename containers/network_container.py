@@ -90,8 +90,8 @@ class NetworkContainer(Container, GameSounds):
 
         if not self.game.is_game_over:
             self.game.update(time_delta)
-            if self.game.field is not None:
-                self.game_field = self.game.field
+            if self.game.is_field_updated:
+                self.game_field = self.game.field.nodes
 
     def render(self):
         if self.game_2 is None:
