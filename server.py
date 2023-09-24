@@ -5,6 +5,8 @@ import pickle
 from constants import IPV4
 from datetime import datetime
 
+from game.game import GameDataContainer
+
 server = IPV4
 port = 5555
 
@@ -19,23 +21,26 @@ s.listen(2)
 print('Waiting for connection, Server Started')
 
 containers = [None, None]
-currentPlayer = 0
+free_slot = [True, True]
 seed = datetime.now().timestamp()
 
 
-def threaded_client(conn, player):
+def threaded_client(conn, player_id: int):
 
     conn.sendall(pickle.dumps(seed))
-    reply_index = (1, 0)[player]
+    reply_index = (1, 0)[player_id]
     while True:
         try:
-            data = pickle.loads(conn.recv(4096))
+            game_data: GameDataContainer = pickle.loads(conn.recv(4096))
 
-            if not data:
+            if not game_data:
                 print("Disconnected")
                 break
             else:
-                containers[player] = data
+                if game_data.field is None and containers[player_id] is not None:
+                    game_data.field = containers[player_id].field
+
+                containers[player_id] = game_data
                 reply = containers[reply_index]
                 # print('Received: ', data)
                 # print('Sending: ', reply)
@@ -47,16 +52,19 @@ def threaded_client(conn, player):
             break
 
     conn.close()
-    global currentPlayer
-    currentPlayer -= 1
+    global free_slot
+    free_slot[player_id] = True
     print('Lost connection')
-    print(f'Connections: {currentPlayer}')
+    print(f'Connections: {free_slot.count(False)}')
 
 
 while True:
     conn, addr = s.accept()
 
-    start_new_thread(threaded_client, (conn, currentPlayer))
-    currentPlayer += 1
-    print("Connected to:", addr)
-    print(f'Connections: {currentPlayer}')
+    for player_id in range(2):
+        if free_slot[player_id]:
+            free_slot[player_id] = False
+            start_new_thread(threaded_client, (conn, player_id))
+            print("Connected to:", addr)
+            print(f'Connections: {free_slot.count(False)}')
+            break

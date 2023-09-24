@@ -14,14 +14,11 @@ class Field:
         self.rows_counter = [0] * height
 
     def update(self, shape, color):
-        print("----------------")
         for pt in shape:
             x, y = int(pt.x), int(pt.y)
 
             self.nodes[y][x] = color
             self.rows_counter[y] += 1
-
-            print("(" + str(x) + "," + str(y) + ") freezed")
 
         return self.check_row()
 

@@ -119,8 +119,8 @@ class Game:
     def freeze_figure(self):
         """Update the field state with current shape and refresh figure."""
         burned_rows_pos = self.field.update(Figure.shape_position(self.figure.position,
-                                                              self.figure.shape_variant,
-                                                              self.figure.orientation), self.figure.color)
+                                                                  self.figure.shape_variant,
+                                                                  self.figure.orientation), self.figure.color)
         burned_rows = len(burned_rows_pos)
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position

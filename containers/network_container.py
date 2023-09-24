@@ -17,7 +17,7 @@ class NetworkContainer(Container, GameSounds):
     def __init__(self, window_surface):
         super().__init__(window_surface)
         GameSounds.__init__(self)
-        # self.music.play(-1)
+        self.music.play(-1)
 
         self.network = Network()
         seed = self.network.get_seed()
@@ -88,16 +88,10 @@ class NetworkContainer(Container, GameSounds):
         if not self.game.is_game_over:
             self.game.update(time_delta)
 
-        if self.game.is_field_updated:
-            self.sfx_play()
-
-        if self.game.is_field_updated:
-            self.sfx_play()
-
     def render(self):
         if self.game_2 is None:
             return
-        print(self.game_2)
+
         if not self.game.is_game_over:
             self.game_1 = self.game.dump()
             game_field_surface_1 = self.renderer_1.render(self.game_1)
