@@ -28,7 +28,7 @@ class SinglePlayerMenu:
         # )
 
         self.sp_ui_menu_panel = pygame_gui.elements.ui_panel.UIPanel(
-            relative_rect=pygame.Rect((100, 200), (250, 400)),
+            relative_rect=pygame.Rect((175, 200), (250, 400)),
             manager=manager,
             visible=False
         )
@@ -41,7 +41,7 @@ class SinglePlayerMenu:
 
         self.element_frame_image = "resources/elem_frame.png"
 
-        self.element_position_x = 425
+        self.element_position_x = 400
         self.element_position_y = 175
 
 
@@ -55,23 +55,29 @@ class SinglePlayerMenu:
         self.sp_next_figure_outer_surface.fill((0, 0, 0, 0))
         self.sp_next_figure_outer_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
 
-        self.sp_score_surface = pygame.Surface((self.element_surface_outer_width, self.element_surface_outer_height))
-        self.sp_score_surface = self.sp_score_surface.convert_alpha()
-        self.sp_score_surface.fill((0, 0, 0, 0))
+        self.sp_score_inner_surface = pygame.Surface(
+            (self.element_surface_inner_width, self.element_surface_inner_height))
+        self.sp_score_outer_surface = pygame.Surface((self.element_surface_outer_width, self.element_surface_outer_height))
+        self.sp_score_outer_surface = self.sp_score_outer_surface.convert_alpha()
+        self.sp_score_outer_surface.fill((0, 0, 0, 0))
         self.sp_score_text_surface = pygame.Surface((self.element_surface_inner_width, self.element_surface_inner_height))
-        self.sp_score_surface.blit(pygame.image.load(self.element_frame_image), (0,0))
+        self.sp_score_outer_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
 
-        self.sp_level_surface = pygame.Surface((self.element_surface_outer_width, self.element_surface_outer_height))
-        self.sp_level_surface = self.sp_level_surface.convert_alpha()
-        self.sp_level_surface.fill((0, 0, 0, 0))
+        self.sp_level_inner_surface = pygame.Surface(
+            (self.element_surface_inner_width, self.element_surface_inner_height))
+        self.sp_level_outer_surface = pygame.Surface((self.element_surface_outer_width, self.element_surface_outer_height))
+        self.sp_level_outer_surface = self.sp_level_outer_surface.convert_alpha()
+        self.sp_level_outer_surface.fill((0, 0, 0, 0))
         self.sp_level_text_surface = pygame.Surface((self.element_surface_inner_width, self.element_surface_inner_height))
-        self.sp_level_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
+        self.sp_level_outer_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
 
-        self.sp_burned_rows_surface = pygame.Surface((self.element_surface_outer_width, self.element_surface_outer_height))
-        self.sp_burned_rows_surface = self.sp_burned_rows_surface.convert_alpha()
-        self.sp_burned_rows_surface.fill((0, 0, 0, 0))
+        self.sp_burned_rows_inner_surface = pygame.Surface(
+            (self.element_surface_inner_width, self.element_surface_inner_height))
+        self.sp_burned_rows_outer_surface = pygame.Surface((self.element_surface_outer_width, self.element_surface_outer_height))
+        self.sp_burned_rows_outer_surface = self.sp_burned_rows_outer_surface.convert_alpha()
+        self.sp_burned_rows_outer_surface.fill((0, 0, 0, 0))
         self.sp_burned_rows_text_surface = pygame.Surface((self.element_surface_inner_width, self.element_surface_inner_height))
-        self.sp_burned_rows_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
+        self.sp_burned_rows_outer_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
 
 
         # #elements of game UI
@@ -117,7 +123,7 @@ class SinglePlayerMenu:
         )
 
         self.sp_mute_music_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((25, 75), (200, 100)),
+            relative_rect=pygame.Rect((25, 25), (200, 100)),
             text='On/Off Music',
             container=self.sp_ui_menu_panel,
             manager=manager,
@@ -168,22 +174,25 @@ class SinglePlayerMenu:
         self.sp_score_text = self.font.render('Current Score: \n \n' + str(self.game.score), antialias=True,
                                               color=(255, 255, 255))
         self.sp_score_text_surface.fill(pygame.Color('#000000'))
-        self.sp_score_text_surface.blit(self.sp_score_text, (10, 10))
-        self.sp_score_surface.blit(self.sp_score_text_surface, (4, 4))
+        self.sp_score_text_surface.blit(self.sp_score_text, (5, 5))
+        self.sp_score_outer_surface.blit(self.sp_score_text_surface, (4, 4))
+        self.sp_score_outer_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
 
         #level
         self.sp_level_text = self.font.render('Current Level: \n \n' + str(self.game.level), antialias=True,
                                               color=(255, 255, 255))
         self.sp_level_text_surface.fill(pygame.Color('#000000'))
-        self.sp_level_text_surface.blit(self.sp_level_text, (10, 10))
-        self.sp_level_surface.blit(self.sp_level_text_surface, (4, 4))
+        self.sp_level_text_surface.blit(self.sp_level_text, (5, 5))
+        self.sp_level_outer_surface.blit(self.sp_level_text_surface, (4, 4))
+        self.sp_level_outer_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
 
         #burned rows
         self.sp_burned_rows_text = self.font.render('Burned rows: \n \n' + str(self.game.burned_rows_total), antialias=True,
                                               color=(255, 255, 255))
         self.sp_burned_rows_text_surface.fill(pygame.Color('#000000'))
-        self.sp_burned_rows_text_surface.blit(self.sp_burned_rows_text, (10, 10))
-        self.sp_burned_rows_surface.blit(self.sp_burned_rows_text_surface, (4, 4))
+        self.sp_burned_rows_text_surface.blit(self.sp_burned_rows_text, (5, 5))
+        self.sp_burned_rows_outer_surface.blit(self.sp_burned_rows_text_surface, (4, 4))
+        self.sp_burned_rows_outer_surface.blit(pygame.image.load(self.element_frame_image), (0, 0))
 
         #next figure
         self.sp_next_figure_item_surface.fill(pygame.Color('#000000'))
@@ -213,9 +222,9 @@ class SinglePlayerMenu:
 
         #build elements into main window
         self.sp_surface.blit(self.sp_next_figure_outer_surface, (self.element_position_x, self.element_position_y))
-        self.sp_surface.blit(self.sp_score_surface, (self.element_position_x, self.element_position_y + 120))
-        self.sp_surface.blit(self.sp_level_surface, (self.element_position_x, self.element_position_y + 240))
-        self.sp_surface.blit(self.sp_burned_rows_surface, (self.element_position_x, self.element_position_y + 360))
+        self.sp_surface.blit(self.sp_score_outer_surface, (self.element_position_x, self.element_position_y + 120))
+        self.sp_surface.blit(self.sp_level_outer_surface, (self.element_position_x, self.element_position_y + 240))
+        self.sp_surface.blit(self.sp_burned_rows_outer_surface, (self.element_position_x, self.element_position_y + 360))
 
 
 
