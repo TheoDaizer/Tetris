@@ -1,6 +1,7 @@
 import socket
 from _thread import start_new_thread
 import pickle
+from typing import Optional
 
 from constants import IPV4
 from datetime import datetime
@@ -20,7 +21,7 @@ except socket.error as e:
 s.listen(2)
 print('Waiting for connection, Server Started')
 
-containers = [None, None]
+containers: list[Optional[GameDataContainer]] = [None, None]
 free_slot = [True, True]
 seed = datetime.now().timestamp()
 
@@ -39,8 +40,8 @@ def threaded_client(conn, player_id: int):
             else:
                 if game_data.field is None and containers[player_id] is not None:
                     game_data.field = containers[player_id].field
-
                 containers[player_id] = game_data
+
                 reply = containers[reply_index]
                 # print('Received: ', data)
                 # print('Sending: ', reply)
@@ -61,10 +62,13 @@ def threaded_client(conn, player_id: int):
 while True:
     conn, addr = s.accept()
 
-    for player_id in range(2):
-        if free_slot[player_id]:
+    for i in range(2):
+        if free_slot[i]:
+            player_id = i
             free_slot[player_id] = False
-            start_new_thread(threaded_client, (conn, player_id))
-            print("Connected to:", addr)
-            print(f'Connections: {free_slot.count(False)}')
             break
+
+    start_new_thread(threaded_client, (conn, player_id))
+    print("Connected to:", addr)
+    print(f'Connections: {free_slot.count(False)}')
+

@@ -26,6 +26,8 @@ class NetworkContainer(Container, GameSounds):
         self.renderer_2 = GameFieldRenderer()
 
         self.game: Game = Game(seed)
+        self.game_field = None
+
         self.game_1: GameDataContainer = self.game.dump()
         self.game_2: Optional[GameDataContainer] = None
         start_new_thread(self.__update_game_2, tuple())
@@ -78,6 +80,7 @@ class NetworkContainer(Container, GameSounds):
     def __update_game_2(self):
         sleep_time = 0.5 / FPS
         while True:
+            self.game_1.field = self.game_field
             self.game_2 = self.network.send(self.game_1)
             sleep(sleep_time)
 
@@ -87,6 +90,8 @@ class NetworkContainer(Container, GameSounds):
 
         if not self.game.is_game_over:
             self.game.update(time_delta)
+            if self.game.field is not None:
+                self.game_field = self.game.field
 
     def render(self):
         if self.game_2 is None:
