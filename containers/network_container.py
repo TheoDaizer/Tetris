@@ -5,7 +5,7 @@ from pygame.surface import Surface
 from pygame.event import Event
 
 from game import Game, GameDataContainer, GameFieldRenderer
-from constants import WINDOWWIDTH, WINDOWHEIGHT, FPS
+from constants import WINDOWWIDTH, WINDOWHEIGHT, FPS, background
 from containers import Container, GameSounds
 
 from _thread import start_new_thread
@@ -35,7 +35,7 @@ class NetworkContainer(Container, GameSounds):
         self.input_mask = 0
 
         self.mp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
-        self.mp_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
+        self.mp_surface.blit(pygame.image.load(background), (0, 0))
 
         self.window_surface.blit(self.mp_surface, (0, 0))
 

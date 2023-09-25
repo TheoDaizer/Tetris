@@ -3,7 +3,7 @@ from pygame.surface import Surface
 from pygame.event import Event
 
 from game import Game, GameFieldRenderer
-from constants import WINDOWWIDTH, WINDOWHEIGHT
+from constants import WINDOWWIDTH, WINDOWHEIGHT, background
 from containers import Container, GameSounds
 
 
@@ -17,7 +17,7 @@ class SinglePlayerContainer(Container, GameSounds):
         self.game = Game()
 
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
-        self.sp_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
+        self.sp_surface.blit(pygame.image.load(background), (0, 0))
 
     @property
     def status(self):

@@ -5,7 +5,7 @@ from pygame.surface import Surface
 from pygame.event import Event
 
 from gui import MainMenu
-from constants import WINDOWWIDTH, WINDOWHEIGHT
+from constants import WINDOWWIDTH, WINDOWHEIGHT, background
 from containers import Container
 
 
@@ -25,7 +25,7 @@ class MenuContainer(Container):
         return self.menu.new_container
 
     def fill_background(self):
-        self.menu_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
+        self.menu_surface.blit(pygame.image.load(background), (0, 0))
 
     def event_handler(self, event: Event):
         self.manager.process_events(event)
