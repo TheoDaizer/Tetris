@@ -40,7 +40,7 @@ class SinglePlayerMenu:
         self.element_surface_outer_height_small = 60
 
         self.element_surface_inner_width_small2 = 116
-        self.element_surface_inner_height_small2 = 26
+        self.element_surface_inner_height_small2 = 40
         self.element_surface_outer_width_small2 = 150
         self.element_surface_outer_height_small2 = 60
 
@@ -132,8 +132,8 @@ class SinglePlayerMenu:
                                               color=(0, 0, 0))
         self.sp_score_text_surface.blit(self.sp_score_text, (0, 0))
         self.sp_score_inner_surface.blit(self.sp_score_text_surface, (0, 0))
-        self.sp_score_outer_surface.blit(self.sp_score_inner_surface, (17, 17))
-        self.sp_score_outer_surface.blit(pygame.image.load("resources/score_bar.png"), (0, 0))
+        self.sp_score_outer_surface.blit(pygame.image.load("resources/score_bar2.png"), (0, 0))
+        self.sp_score_outer_surface.blit(self.sp_score_inner_surface, (17, 12))
 
         self.sp_surface.blit(self.sp_score_outer_surface,
                              (self.element_position_x, self.element_position_y + 220))
@@ -198,6 +198,8 @@ class SinglePlayerMenu:
         #score
         if self.game.score > self.sp_score:
             self.sp_surface.blit(pygame.image.load(background), (0, 0))
+            self.sp_surface.blit(self.sp_score_label_outer_surface,
+                                 (self.element_position_x, self.element_position_y + 120))
             self.sp_score_text_surface.fill((0, 0, 0, 0))
             self.sp_score_inner_surface.fill((0, 0, 0, 0))
             self.sp_score_outer_surface.fill((0, 0, 0, 0))
@@ -206,8 +208,8 @@ class SinglePlayerMenu:
                                                       color=(0, 0, 0))
             self.sp_score_text_surface.blit(self.sp_score_text, (0, 0))
             self.sp_score_inner_surface.blit(self.sp_score_text_surface, (0, 0))
-            self.sp_score_outer_surface.blit(self.sp_score_inner_surface, (17, 17))
-            self.sp_score_outer_surface.blit(pygame.image.load("resources/score_bar.png"), (0, 0))
+            self.sp_score_outer_surface.blit(pygame.image.load("resources/score_bar2.png"), (0, 0))
+            self.sp_score_outer_surface.blit(self.sp_score_inner_surface, (17, 12))
 
         #level
         self.sp_level_text = self.font.render('Current Level: \n \n' + str(self.game.level), antialias=True,
@@ -228,6 +230,8 @@ class SinglePlayerMenu:
         #next figure
         if self.game.field is not None:
             self.sp_surface.blit(pygame.image.load(background), (0, 0))
+            self.sp_surface.blit(self.sp_score_label_outer_surface,
+                                 (self.element_position_x, self.element_position_y + 120))
             self.sp_next_figure_outer_surface.fill((0, 0, 0, 0))
             self.sp_next_figure_inner_surface.fill((255, 255, 255, 75))
             self.sp_next_figure_item_surface.fill((0, 0, 0, 0))
