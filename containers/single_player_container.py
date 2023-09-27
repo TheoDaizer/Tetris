@@ -21,8 +21,8 @@ class SinglePlayerContainer(Container, GameSounds):
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.sp_surface.blit(pygame.image.load(background), (0, 0))
 
-        self.gamefield_pos_x = 40
-        self.gamefield_pos_y = 100
+        self.gamefield_pos_x = 60
+        self.gamefield_pos_y = 80
 
         # interface objects
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
@@ -77,9 +77,11 @@ class SinglePlayerContainer(Container, GameSounds):
     def render(self):
         game_data = self.game.dump()
         game_field_surface = self.renderer.render(game_data)
+        self.sp_surface.blit(pygame.image.load("resources/game_field_frame.png"),
+                             (self.gamefield_pos_x - 39, self.gamefield_pos_y - 46))
         self.sp_surface.blit(game_field_surface, (self.gamefield_pos_x, self.gamefield_pos_y))
         #game field frame (is it better to incorporate in renderer?)
-        self.sp_surface.blit(pygame.image.load("resources/game_field_frame.png"), (self.gamefield_pos_x - 18, self.gamefield_pos_y - 15))
+
 
         self.manager.draw_ui(self.sp_surface)
 
