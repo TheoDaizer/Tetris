@@ -3,45 +3,31 @@ import pygame_gui
 from pygame.surface import Surface
 from pygame.event import Event
 
-
 from game import Game, GameFieldRenderer
 from game.point import Point
+from constants import WINDOWWIDTH, WINDOWHEIGHT, background
 from containers import Container, GameSounds
-from constants import WINDOWWIDTH, WINDOWHEIGHT, BACKGROUNDPATH
 from gui.single_player_ui import SinglePlayerMenu
 
 class SinglePlayerContainer(Container, GameSounds):
     def __init__(self, window_surface):
         super().__init__(window_surface)
         GameSounds.__init__(self)
+        self.music.play(-1)
 
         self.renderer = GameFieldRenderer()
         self.game = Game()
 
-
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
-        self.sp_surface.blit(pygame.image.load(BACKGROUNDPATH), (0, 0))
-        self.gamefield_pos_x =  40
+        self.sp_surface.blit(pygame.image.load(background), (0, 0))
+
+        self.gamefield_pos_x = 40
         self.gamefield_pos_y = 100
 
-        #interface objects
+        # interface objects
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
 
-
         self.sp_ui_menu = SinglePlayerMenu(self.manager, self.game, self.sp_surface)
-
-        self.freeze_sound = pygame.mixer.Sound('resources/sfx-1.mp3')
-        self.freeze_sound.set_volume(0.5)
-
-        self.burn_sound = pygame.mixer.Sound('resources/sfx-2.mp3')
-        self.burn_sound.set_volume(0.5)
-
-        self.game_over = pygame.mixer.Sound('resources/game-over.mp3')
-        self.game_over.set_volume(0.1)
-
-        self.music = pygame.mixer.Sound('resources/8_bit_-_Korobejniki.mp3')
-        self.music.set_volume(0.5)
-        self.music.play(-1)
 
     @property
     def status(self):

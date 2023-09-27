@@ -14,22 +14,19 @@ class Field:
         self.rows_counter = [0] * height
 
     def update(self, shape, color):
-        print("----------------")
         for pt in shape:
             x, y = int(pt.x), int(pt.y)
 
             self.nodes[y][x] = color
             self.rows_counter[y] += 1
 
-            print("(" + str(x) + "," + str(y) + ") freezed")
-
         return self.check_row()
 
-    def check_row(self) -> int:
-        burned_rows = 0
+    def check_row(self) -> list:
+        burned_rows = []
         for row_n in range(self.height):
             if self.rows_counter[row_n] == self.width:
-                burned_rows += 1
+                burned_rows.append(row_n)
                 self.rows_counter[row_n] = 0
                 self.remove_row(row_n)
         return burned_rows

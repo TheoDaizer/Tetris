@@ -4,6 +4,8 @@ from constants import FALLINGSPEED, SPEED_INCREMENT, SPEEDMULTIPLIER, GRIDWIDTH,
 from .field import Field
 from .figure import Figure
 from .point import Point
+from .animation import Animation
+from .animation import AnimationType
 
 
 class Game:
@@ -31,6 +33,8 @@ class Game:
         self.burned_rows_total = 0
         self.burned_rows = 0
         self.is_game_over = False
+
+        self.active_animations = []
 
     def update(self, time_delta: float):
         self.burned_rows = 0
@@ -78,6 +82,10 @@ class Game:
             self.update_speed()
             self.update_burned_score(self.burned_rows)
 
+        for animation in self.active_animations:
+            if not animation[0].update(time_delta):
+                self.active_animations.remove(animation)
+
     def key_left_down(self):
         self.key_left = True
         self.slide_counter = - FPS // 8
@@ -110,15 +118,21 @@ class Game:
     
     def freeze_figure(self):
         """Update the field state with current shape and refresh figure."""
-        burned_rows = self.field.update(Figure.shape_position(self.figure.position,
-                                                              self.figure.shape_variant,
-                                                              self.figure.orientation), self.figure.color)
-        print('Burned rows: ', burned_rows)
+        burned_rows_pos = self.field.update(Figure.shape_position(self.figure.position,
+                                                                  self.figure.shape_variant,
+                                                                  self.figure.orientation), self.figure.color)
+        burned_rows = len(burned_rows_pos)
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position
             if pos.y == 0 and not burned_rows:
                 return self.game_over()
         self.figure.refresh()
+
+        for row in burned_rows_pos:
+            for column in range(GRIDWIDTH):
+                self.active_animations.append((Animation(AnimationType.BURN_ANIMATION,
+                                                         len(Animation.frames_container[AnimationType.BURN_ANIMATION])),
+                                               (column, row)))
 
         self.is_field_updated = True
         return burned_rows
@@ -202,3 +216,5 @@ class GameDataContainer:
         self.burned_rows_total = game.burned_rows_total
         self.burned_rows = game.burned_rows
         self.is_game_over = game.is_game_over
+
+        self.active_animations = game.active_animations

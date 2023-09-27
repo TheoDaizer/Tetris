@@ -3,7 +3,7 @@ from pygame.surface import Surface
 from pygame.event import Event
 
 from game import Game, GameFieldRenderer
-from constants import WINDOWWIDTH, WINDOWHEIGHT
+from constants import WINDOWWIDTH, WINDOWHEIGHT, background
 from containers import Container, GameSounds
 
 from datetime import datetime
@@ -13,6 +13,7 @@ class HotSeatContainer(Container, GameSounds):
     def __init__(self, window_surface):
         super().__init__(window_surface)
         GameSounds.__init__(self)
+        self.music.play(-1)
 
         self.renderer_1 = GameFieldRenderer()
         self.renderer_2 = GameFieldRenderer()
@@ -22,7 +23,7 @@ class HotSeatContainer(Container, GameSounds):
         self.game_2 = Game(seed)
 
         self.hs_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
-        self.hs_surface.blit(pygame.image.load("resources/background2.jpg"), (0, 0))
+        self.hs_surface.blit(pygame.image.load(background), (0, 0))
 
     @property
     def status(self):
