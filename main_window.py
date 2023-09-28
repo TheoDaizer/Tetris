@@ -17,11 +17,11 @@ class MainWindow:
 
         self.container: Container = MenuContainer(self.window_surface)
 
-    def run(self):
-
+    def run(self, render_fps: bool = False):
+        if render_fps:
+            pygame.font.init()
         while True:
             dt = self.clock.tick(FPS)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -34,4 +34,13 @@ class MainWindow:
                 self.container = CONTAINERS[self.container.status](self.window_surface)
 
             self.container.render()
+            if render_fps:
+                self.render_fps(dt)
             pygame.display.update()
+
+    def render_fps(self, dt: int):
+
+        my_font = pygame.font.SysFont('Arial', 30)
+
+        text_surface = my_font.render(f'{1000 // dt}', False, (0, 0, 0))
+        self.window_surface.blit(text_surface, (10, 10))

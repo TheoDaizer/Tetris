@@ -1,6 +1,6 @@
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 800
-BACKGROUNDPATH = "resources/background2.jpg"
+BACKGROUNDPATH = "resources/background.png"
 TILESIZE = 32  # Tile size in pixels
 
 # Game field(grid) size in tiles
@@ -18,8 +18,6 @@ SPEED_INCREMENT = 0.0005  # speed increment for level progression
 SPEEDMULTIPLIER = 20  # accelerated figure falling speed (cell/ms)
 
 STARTING_POSITION = (4, 0)  # figure spawn position
-
-background = "resources/background.png"
 
 # Theodore
 # IPV4 = '25.47.240.219'  # cmd> ipconfig

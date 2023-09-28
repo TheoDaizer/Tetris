@@ -86,6 +86,8 @@ class Game:
             if not animation[0].update(time_delta):
                 self.active_animations.remove(animation)
 
+        return self.dump()
+
     def key_left_down(self):
         self.key_left = True
         self.slide_counter = - FPS // 8

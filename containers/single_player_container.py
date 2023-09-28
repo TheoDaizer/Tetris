@@ -3,11 +3,11 @@ import pygame_gui
 from pygame.surface import Surface
 from pygame.event import Event
 
-from game import Game, GameFieldRenderer
-from game.point import Point
-from constants import WINDOWWIDTH, WINDOWHEIGHT, background
+from game import Game, GameDataContainer, GameFieldRenderer
+from constants import WINDOWWIDTH, WINDOWHEIGHT, BACKGROUNDPATH
 from containers import Container, GameSounds
 from gui.single_player_ui import SinglePlayerMenu
+
 
 class SinglePlayerContainer(Container, GameSounds):
     def __init__(self, window_surface):
@@ -17,30 +17,32 @@ class SinglePlayerContainer(Container, GameSounds):
 
         self.renderer = GameFieldRenderer()
         self.game = Game()
+        self.game_data: GameDataContainer = self.game.dump()
 
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
-        self.sp_surface.blit(pygame.image.load(background), (0, 0))
+        self.sp_surface.blit(pygame.image.load(BACKGROUNDPATH), (0, 0))
 
         self.gamefield_pos_x = 60
         self.gamefield_pos_y = 80
 
+        self.sp_surface.blit(pygame.image.load("resources/game_field_frame.png"),
+                             (self.gamefield_pos_x - 39, self.gamefield_pos_y - 46))
+
         # interface objects
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
 
-        self.sp_ui_menu = SinglePlayerMenu(self.manager, self.game, self.sp_surface)
+        self.sp_ui_menu = SinglePlayerMenu(self.manager, self.game_data, self.sp_surface)
 
     @property
     def status(self):
-        if self.game.is_game_over:
+        if self.game.is_game_over or self.sp_ui_menu.is_game_over:
             self.music.stop()
             self.game_over.play()
             return 'menu'
         return None
 
     def event_handler(self, event: Event):
-        self.manager.process_events(event)
         if not self.sp_ui_menu.pause_state:
-
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     self.game.key_left_down()
@@ -52,6 +54,8 @@ class SinglePlayerContainer(Container, GameSounds):
                     self.game.key_down_down()
                 if event.key == pygame.K_SPACE:
                     self.game.key_space_down()
+                if event.key == pygame.K_ESCAPE:
+                    self.sp_ui_menu.key_esc_down()
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
@@ -60,14 +64,18 @@ class SinglePlayerContainer(Container, GameSounds):
                     self.game.key_left_up()
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     self.game.key_right_up()
-
-        self.sp_ui_menu.event_handler(event)
+        else:
+            self.manager.process_events(event)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.sp_ui_menu.key_esc_down()
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                self.sp_ui_menu.button_pressed(event)
 
     def update(self, time_delta: float):
         if not self.sp_ui_menu.pause_state:
-            self.game.update(time_delta)
-            self.manager.update(time_delta)
-            self.sp_ui_menu.update()
+            self.game_data = self.game.update(time_delta)
+            self.sp_ui_menu.update(self.game_data)
 
             if self.game.is_field_updated:
                 self.sfx_play()
@@ -75,15 +83,11 @@ class SinglePlayerContainer(Container, GameSounds):
             self.manager.update(time_delta)
 
     def render(self):
-        game_data = self.game.dump()
-        game_field_surface = self.renderer.render(game_data)
-        self.sp_surface.blit(pygame.image.load("resources/game_field_frame.png"),
-                             (self.gamefield_pos_x - 39, self.gamefield_pos_y - 46))
+        game_field_surface = self.renderer.render(self.game_data)
         self.sp_surface.blit(game_field_surface, (self.gamefield_pos_x, self.gamefield_pos_y))
-        #game field frame (is it better to incorporate in renderer?)
 
-
-        self.manager.draw_ui(self.sp_surface)
+        if self.sp_ui_menu.pause_state:
+            self.manager.draw_ui(self.sp_surface)
 
         self.window_surface.blit(self.sp_surface, (0, 0))
 
