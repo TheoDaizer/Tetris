@@ -73,32 +73,38 @@ class Buttons:
         )
 
         #  multiplayer buttons
+        self.hotseat_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((button_pos_x, button_pos_y1), (button_size_x, button_size_y)),
+            text='Hotseat',
+            manager=manager,
+        )
+
         self.start_server_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((button_pos_x, button_pos_y2), (button_size_x, button_size_y)),
             text='Start Server',
             manager=manager,
         )
 
-        self.start_multiplayer_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y1), (button_size_x, button_size_y)),
-            text='Start Multiplayer Game',
+        self.join_server_button = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((button_pos_x, button_pos_y3), (button_size_x, button_size_y)),
+            text='Join Server',
             manager=manager,
         )
 
         self.ip_entry_box = pygame_gui.elements.UITextEntryBox(
-            relative_rect=pygame.Rect((button_pos_x2, button_pos_y3), (button_size_x, button_size_y)),
+            relative_rect=pygame.Rect((button_pos_x2, button_pos_y4), (button_size_x, button_size_y)),
             manager=manager,
         )
         self.ip_entry_box.set_text("e.g. 192.182.1.1")
 
         self.ip_text_box = pygame_gui.elements.UITextBox(
-            relative_rect=pygame.Rect((button_pos_x1, button_pos_y3), (button_size_x, button_size_y)),
+            relative_rect=pygame.Rect((button_pos_x1, button_pos_y4), (button_size_x, button_size_y)),
             html_text='Enter Server IP Address',
             manager=manager,
         )
 
         self.mp_btm_button = pygame_gui.elements.UIButton(
-            relative_rect=pygame.Rect((button_pos_x, button_pos_y4), (button_size_x, button_size_y)),
+            relative_rect=pygame.Rect((button_pos_x, button_pos_y5), (button_size_x, button_size_y)),
             text='Back to Menu',
             manager=manager,
         )
@@ -158,7 +164,8 @@ class Buttons:
     def multiplayer(self):
         self.hide()
         self.start_server_button.visible = True
-        self.start_multiplayer_button.visible = True
+        self.join_server_button.visible = True
+        self.hotseat_button.visible = True
         self.ip_entry_box.visible = True
         self.ip_text_box.visible = True
         self.mp_btm_button.visible = True
@@ -184,7 +191,8 @@ class Buttons:
         self.high_scores_button.visible = False
         self.sp_btm_button.visible = False
         self.start_server_button.visible = False
-        self.start_multiplayer_button.visible = False
+        self.join_server_button.visible = False
+        self.hotseat_button.visible = False
         self.ip_entry_box.visible = False
         self.ip_text_box.visible = False
         self.mp_btm_button.visible = False

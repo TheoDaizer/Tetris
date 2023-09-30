@@ -46,3 +46,5 @@ O_FORM = (
     ((0, 0), (0, 1), (1, 0), (1, 1)),
     ((0, 0), (0, 1), (1, 0), (1, 1)),
 )
+
+SHAPES = (I_FORM, J_FORM, L_FORM, T_FORM, Z_FORM, S_FORM, O_FORM)

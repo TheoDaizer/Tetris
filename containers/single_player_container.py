@@ -77,7 +77,7 @@ class SinglePlayerContainer(Container, GameSounds):
             self.game_data = self.game.update(time_delta)
             self.sp_ui_menu.update(self.game_data)
 
-            if self.game.is_field_updated:
+            if self.game_data.is_field_updated:
                 self.sfx_play()
         else:
             self.manager.update(time_delta)
@@ -92,9 +92,9 @@ class SinglePlayerContainer(Container, GameSounds):
         self.window_surface.blit(self.sp_surface, (0, 0))
 
     def sfx_play(self):
-        if self.game.burned_rows == 4:
+        if self.game_data.burned_rows == 4:
             self.burn_tetris.play()
-        elif self.game.burned_rows:
+        elif self.game_data.burned_rows:
             self.burn_sound.play()
         else:
             self.freeze_sound.play()

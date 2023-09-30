@@ -1,18 +1,14 @@
 import random
 from typing import Optional
 from .point import Point
-from .figures import *
-from .colors import *
+from .figures import SHAPES
 
 from constants import GRIDHEIGHT
 
 
 class Figure:
     """Class represents playing figures"""
-    tuple_shapes = (I_FORM, J_FORM, L_FORM, T_FORM, Z_FORM, S_FORM, O_FORM)
-
-    all_shapes = [[[Point(pt[0], pt[1]) for pt in var] for var in shape] for shape in tuple_shapes]
-    all_colors = (LIGHT_BLUE, BLUE, ORANGE, PURPLE, GREEN, RED, YELLOW)
+    all_shapes = [[[Point(pt[0], pt[1]) for pt in var] for var in shape] for shape in SHAPES]
 
     def __init__(self, default_position: Point, default_orientation: int = 0, seed: Optional[float] = None):
         self.rnd = random.Random()
@@ -44,14 +40,6 @@ class Figure:
     @property
     def next_shape(self):
         return self.all_shapes[self.next_shape_variant]
-
-    @property
-    def color(self):
-        return self.all_colors[self.shape_variant]
-
-    @property
-    def next_color(self):
-        return self.all_colors[self.next_shape_variant]
 
     def rotate(self):
         self.orientation = (self.orientation + 1) % len(self.shape)
