@@ -4,6 +4,8 @@ import pygame
 from pygame.surface import Surface
 from pygame.event import Event
 
+import socket
+
 from game import Game, GameDataContainer, GameFieldRenderer
 from constants import WINDOWWIDTH, WINDOWHEIGHT, FPS, background
 from containers import Container, GameSounds
@@ -13,12 +15,13 @@ from network import Network
 from time import sleep
 
 
-class NetworkContainer(Container, GameSounds):
+class ClientContainer(Container, GameSounds):
     def __init__(self, window_surface):
         super().__init__(window_surface)
         GameSounds.__init__(self)
         self.music.play(-1)
 
+        self.lost_connection = False
         self.network = Network()
         seed = self.network.get_seed()
 
@@ -41,7 +44,7 @@ class NetworkContainer(Container, GameSounds):
 
     @property
     def status(self):
-        if self.game.is_game_over and self.game_2.is_game_over:
+        if self.lost_connection or (self.game.is_game_over and self.game_2.is_game_over):
             self.music.stop()
             self.game_over.play()
             return 'menu'
@@ -81,7 +84,12 @@ class NetworkContainer(Container, GameSounds):
         sleep_time = 0.5 / FPS
         while True:
             self.game_1.field = self.game_field
-            self.game_2 = self.network.send(self.game_1)
+            try:
+                self.game_2 = self.network.send(self.game_1)
+            except socket.error as err:
+                print(err)
+                self.lost_connection = True
+                break
             sleep(sleep_time)
 
     def update(self, time_delta: float):

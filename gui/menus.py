@@ -53,12 +53,16 @@ class MultiplayerMenu(Menu):
         self.buttons.multiplayer()
 
     def process_events(self, event: Event):
-        if event.ui_element == self.buttons.start_server_button:
-            self._new_container = 'mp'
+        if event.ui_element == self.buttons.hotseat_button:
+            self._new_container = 'hs'
             return self
 
-        if event.ui_element == self.buttons.start_multiplayer_button:
-            self._new_container = 'hs'
+        if event.ui_element == self.buttons.start_server_button:
+            self._new_container = 'srv'
+            return self
+
+        if event.ui_element == self.buttons.join_server_button:
+            self._new_container = 'cln'
             return self
 
         if event.ui_element == self.buttons.mp_btm_button:

@@ -20,9 +20,13 @@ STARTING_POSITION = (4, 0)  # figure spawn position
 
 background = "resources/background.png"
 
+# Network constants
+
 # Theodore
-# IPV4 = '25.47.240.219'  # cmd> ipconfig
+IPV4 = '25.47.240.219'  # cmd> ipconfig
 # Denis
 # IPV4 = '25.50.55.253'
 # Valentin
-IPV4 = '25.48.128.45'
+# IPV4 = '25.48.128.45'
+PORT = 5555
+PACKAGE_SIZE = 4096
