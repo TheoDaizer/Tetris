@@ -86,6 +86,8 @@ class Game:
             if not animation[0].update(time_delta):
                 self.active_animations.remove(animation)
 
+        return self.dump()
+
     def key_left_down(self):
         self.key_left = True
         self.slide_counter = - FPS // 8
@@ -118,9 +120,11 @@ class Game:
     
     def freeze_figure(self):
         """Update the field state with current shape and refresh figure."""
-        burned_rows_pos = self.field.update(Figure.shape_position(self.figure.position,
-                                                                  self.figure.shape_variant,
-                                                                  self.figure.orientation), self.figure.color)
+        burned_rows_pos = self.field.update(self.figure.position.x,
+                                            int(self.figure.position.y),
+                                            self.figure.shape_variant,
+                                            self.figure.orientation
+                                            )
         burned_rows = len(burned_rows_pos)
         for pt in self.figure.shape[self.figure.orientation]:
             pos = pt + self.figure.position
@@ -191,7 +195,9 @@ class Game:
         self.speed = FALLINGSPEED + SPEED_INCREMENT * (self.level - 1)
 
     def dump(self):
-        return GameDataContainer(game=self)
+        data = GameDataContainer(game=self)
+        self.is_field_updated = False
+        return data
 
     def game_over(self):
         self.is_game_over = True
@@ -201,15 +207,14 @@ class Game:
 
 class GameDataContainer:
     def __init__(self, game: Game):
-        self.figure_position = game.figure.position
-        self.shadow_position = game.figure.shadow_position
+        self.figure_position = (game.figure.position.x, game.figure.position.y)
+        self.shadow_position = (game.figure.shadow_position.x, game.figure.shadow_position.y)
         self.shape_variant = game.figure.shape_variant
         self.next_shape_variant = game.figure.next_shape_variant
         self.orientation = game.figure.orientation
-        self.field = None
-        if game.is_field_updated:
-            game.is_field_updated = False
-            self.field = game.field.nodes
+
+        self.is_field_updated = game.is_field_updated
+        self.field = game.field.nodes
 
         self.score = game.score
         self.level = game.level

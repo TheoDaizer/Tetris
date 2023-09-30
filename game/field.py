@@ -1,3 +1,6 @@
+from .figures import SHAPES
+
+
 class Field:
     """Class represents playing field.
 
@@ -13,12 +16,11 @@ class Field:
         self.nodes = [[None for _ in range(width)] for _ in range(height)]
         self.rows_counter = [0] * height
 
-    def update(self, shape, color):
-        for pt in shape:
-            x, y = int(pt.x), int(pt.y)
-
-            self.nodes[y][x] = color
-            self.rows_counter[y] += 1
+    def update(self, x: int, y: int, shape_variant: int, orientation: int):
+        for dx, dy in SHAPES[shape_variant][orientation]:
+            node_x, node_y = x + dx, y + dy
+            self.nodes[node_y][node_x] = shape_variant
+            self.rows_counter[node_y] += 1
 
         return self.check_row()
 

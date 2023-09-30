@@ -2,7 +2,7 @@ import pygame
 from pygame.surface import Surface
 from pygame.event import Event
 
-from game import Game, GameFieldRenderer
+from game import Game, GameDataContainer, GameFieldRenderer
 from constants import WINDOWWIDTH, WINDOWHEIGHT, background
 from containers import Container, GameSounds
 
@@ -15,6 +15,8 @@ class SinglePlayerContainer(Container, GameSounds):
 
         self.renderer = GameFieldRenderer()
         self.game = Game()
+
+        self.game_data: GameDataContainer = self.game.dump()
 
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.sp_surface.blit(pygame.image.load(background), (0, 0))
@@ -49,21 +51,20 @@ class SinglePlayerContainer(Container, GameSounds):
                 self.game.key_right_up()
 
     def update(self, time_delta: float):
-        self.game.update(time_delta)
-        if self.game.is_field_updated:
+        self.game_data = self.game.update(time_delta)
+        if self.game_data.is_field_updated:
             self.sfx_play()
 
     def render(self):
-        game_data = self.game.dump()
-        game_field_surface = self.renderer.render(game_data)
+        game_field_surface = self.renderer.render(self.game_data)
         self.sp_surface.blit(game_field_surface, (WINDOWWIDTH // 4, 50))
 
         self.window_surface.blit(self.sp_surface, (0, 0))
 
     def sfx_play(self):
-        if self.game.burned_rows == 4:
+        if self.game_data.burned_rows == 4:
             self.burn_tetris.play()
-        elif self.game.burned_rows:
+        elif self.game_data.burned_rows:
             self.burn_sound.play()
         else:
             self.freeze_sound.play()
