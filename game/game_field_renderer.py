@@ -30,7 +30,7 @@ class GameFieldRenderer:
         self.field_surfaces.blit(self.bg_image, (0, 0))
         self.figure_surfaces.blit(self.bg_image, (0, 0))
 
-        self.field: Optional[list] = None
+        self.field: list = [[None for _ in range(FIELDWIDTH)] for _ in range(FIELDHEIGHT)]
 
     def draw_grid(self):
         self.grid_surface.fill((255, 255, 255, 0))
@@ -62,7 +62,7 @@ class GameFieldRenderer:
         rect = pygame.Rect(x * TILESIZE + x_shift, y * TILESIZE, TILESIZE, TILESIZE)
         pygame.draw.rect(surface, COLORS[shape_variant], rect, 0)
         surface.blit(self.block_image, (x * TILESIZE + x_shift, y * TILESIZE))
-        if self.field and (y+1) < GRIDHEIGHT and self.field[y+1][x] is None:
+        if (y+1) < GRIDHEIGHT and self.field[y+1][x] is None:
             surface.blit(self.block_shadow_image, (x * TILESIZE + x_shift, (y + 1) * TILESIZE))
 
     def render_field(self, field):
