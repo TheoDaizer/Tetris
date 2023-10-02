@@ -7,7 +7,7 @@ from pygame.event import Event
 import socket
 
 from game import Game, GameDataContainer, GameFieldRenderer
-from constants import WINDOWWIDTH, WINDOWHEIGHT, FPS, BACKGROUNDPATH
+from constants import WINDOWWIDTH, WINDOWHEIGHT, FPS, BACKGROUND
 from containers import Container, GameSounds
 
 from _thread import start_new_thread
@@ -39,7 +39,7 @@ class ClientContainer(Container, GameSounds):
         self.input_mask = 0
 
         self.mp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
-        self.mp_surface.blit(pygame.image.load(BACKGROUNDPATH), (0, 0))
+        self.mp_surface.blit(pygame.image.load(BACKGROUND), (0, 0))
 
         self.window_surface.blit(self.mp_surface, (0, 0))
 

@@ -4,9 +4,10 @@ from pygame.surface import Surface
 from pygame.event import Event
 
 from game import Game, GameDataContainer, GameFieldRenderer
-from constants import WINDOWWIDTH, WINDOWHEIGHT, BACKGROUNDPATH
+from constants import WINDOWWIDTH, WINDOWHEIGHT, BACKGROUND
+from gui.gui_constants import gamefield_pos_x, gamefield_pos_y
 from containers import Container, GameSounds
-from gui.single_player_ui import SinglePlayerMenu
+from gui.gui_sp import SinglePlayerMenu
 
 
 class SinglePlayerContainer(Container, GameSounds):
@@ -20,10 +21,10 @@ class SinglePlayerContainer(Container, GameSounds):
         self.game_data: GameDataContainer = self.game.dump()
 
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
-        self.sp_surface.blit(pygame.image.load(BACKGROUNDPATH), (0, 0))
+        self.sp_surface.blit(pygame.image.load(BACKGROUND), (0, 0))
 
-        self.gamefield_pos_x = 60
-        self.gamefield_pos_y = 80
+        self.gamefield_pos_x = gamefield_pos_x
+        self.gamefield_pos_y = gamefield_pos_y
 
         self.sp_surface.blit(pygame.image.load("resources/game_field_frame.png"),
                              (self.gamefield_pos_x - 39, self.gamefield_pos_y - 46))
@@ -31,7 +32,7 @@ class SinglePlayerContainer(Container, GameSounds):
         # interface objects
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
 
-        self.sp_ui_menu = SinglePlayerMenu(self.manager, self.game_data, self.sp_surface)
+        self.sp_ui_menu = SinglePlayerMenu(self.manager, self.game_data, self.sp_surface, self.music)
 
     @property
     def status(self):
@@ -85,6 +86,7 @@ class SinglePlayerContainer(Container, GameSounds):
     def render(self):
         game_field_surface = self.renderer.render(self.game_data)
         self.sp_surface.blit(game_field_surface, (self.gamefield_pos_x, self.gamefield_pos_y))
+        # self.sp_ui_menu.render(self.game_data)
 
         if self.sp_ui_menu.pause_state:
             self.manager.draw_ui(self.sp_surface)
