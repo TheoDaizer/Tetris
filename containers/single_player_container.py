@@ -5,9 +5,9 @@ from pygame.event import Event
 
 from game import Game, GameDataContainer, GameFieldRenderer
 from constants import WINDOWWIDTH, WINDOWHEIGHT, BACKGROUND
-from gui.gui_constants import gamefield_pos_x, gamefield_pos_y
+from gui.gui_constants import game_field_pos_x, game_field_pos_y, game_field_frame
 from containers import Container, GameSounds
-from gui.gui_sp import SinglePlayerMenu
+from gui.single_player_gui import SinglePlayerMenu
 
 
 class SinglePlayerContainer(Container, GameSounds):
@@ -23,16 +23,15 @@ class SinglePlayerContainer(Container, GameSounds):
         self.sp_surface = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.sp_surface.blit(pygame.image.load(BACKGROUND), (0, 0))
 
-        self.gamefield_pos_x = gamefield_pos_x
-        self.gamefield_pos_y = gamefield_pos_y
-
-        self.sp_surface.blit(pygame.image.load("resources/game_field_frame.png"),
-                             (self.gamefield_pos_x - 39, self.gamefield_pos_y - 46))
-
-        # interface objects
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
-
         self.sp_ui_menu = SinglePlayerMenu(self.manager, self.game_data, self.sp_surface, self.music)
+
+        self.sp_surface.blit(pygame.image.load(game_field_frame),
+                             (game_field_pos_x - 39, game_field_pos_y - 46))
+
+        self.sp_surface_background = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+        self.sp_surface_background.blit(self.sp_surface, (0, 0))
+        self.field_refresh_flag = False
 
     @property
     def status(self):
@@ -84,12 +83,17 @@ class SinglePlayerContainer(Container, GameSounds):
             self.manager.update(time_delta)
 
     def render(self):
+
+        if self.field_refresh_flag:
+            self.sp_surface.blit(self.sp_surface_background, (0, 0))
+
         game_field_surface = self.renderer.render(self.game_data)
-        self.sp_surface.blit(game_field_surface, (self.gamefield_pos_x, self.gamefield_pos_y))
-        # self.sp_ui_menu.render(self.game_data)
+        self.sp_surface.blit(game_field_surface, (game_field_pos_x, game_field_pos_y))
+        self.sp_surface.blit(self.sp_ui_menu.render(), (0, 0))
 
         if self.sp_ui_menu.pause_state:
             self.manager.draw_ui(self.sp_surface)
+            self.field_refresh_flag = True
 
         self.window_surface.blit(self.sp_surface, (0, 0))
 

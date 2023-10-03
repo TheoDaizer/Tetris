@@ -13,7 +13,10 @@ element_inner_height_3 = 40
 element_outer_width_3 = 150
 element_outer_height_3 = 60
 
-gamefield_pos_x = 60
-gamefield_pos_y = 80
-gamefield_pos_x2 = 660
-gamefield_pos_y2 = 880
+game_field_pos_x = 60
+game_field_pos_y = 80
+game_field_pos_x2 = 660
+game_field_pos_y2 = 880
+
+font_source = "resources/MightyKingdom.ttf"
+game_field_frame = "resources/game_field_frame.png"
