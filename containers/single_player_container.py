@@ -68,7 +68,13 @@ class SinglePlayerContainer(Container, GameSounds):
             self.manager.process_events(event)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
+                    print(self.sp_ui_menu.pause_state)
+                    if not self.sp_ui_menu.pause_state:
+                        self.sp_surface_background.blit(pygame.display.get_surface(), (0, 0))
+                    else:
+                        self.field_refresh_flag = True
                     self.sp_ui_menu.key_esc_down()
+
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 self.sp_ui_menu.button_pressed(event)
 
@@ -83,8 +89,8 @@ class SinglePlayerContainer(Container, GameSounds):
             self.manager.update(time_delta)
 
     def render(self):
-
         if self.field_refresh_flag:
+            self.field_refresh_flag = False
             self.sp_surface.blit(self.sp_surface_background, (0, 0))
 
         game_field_surface = self.renderer.render(self.game_data)
@@ -93,7 +99,6 @@ class SinglePlayerContainer(Container, GameSounds):
 
         if self.sp_ui_menu.pause_state:
             self.manager.draw_ui(self.sp_surface)
-            self.field_refresh_flag = True
 
         self.window_surface.blit(self.sp_surface, (0, 0))
 
