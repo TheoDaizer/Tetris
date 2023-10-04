@@ -1,8 +1,9 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
-from pygame import Surface
+from pygame import Surface, Rect
 from game import GameDataContainer
 from gui.gui_constants import font_source
+
 
 class GuiElement(ABC):
     font_source = font_source
@@ -10,28 +11,32 @@ class GuiElement(ABC):
     bar_image = "resources/score_bar2.png"
     label_inner_surface_offset = (4, 5)
     label_text_offset = (5, 0)
+
+    # Individual for child class
+    width = 125
+    height = 38
+
+    d_bg: tuple[int, int] = (0, 0)
+    d_label: tuple[int, int] = (0, 0)
+
     def __init__(self, x: int, y: int, background: Surface):
-        self.pos_x_frame = x
-        self.pos_y_frame = y
-        self.background_main = background
+        self.pos_frame = (x, y)
+        self.pos_bg = (x + self.d_bg[0], x + self.d_bg[1])
+        self.pos_label = (x + self.d_label[0], x + self.d_label[1])
+
+        self.background = self._create_background(background)
         self.is_changed = True
-        # self.width = width
-        # self.height = height
 
-    #     self.background: Surface = self._prepare_background(x, y, background)
-    #
-    # def _prepare_background(self, x: int, y: int, background: Surface) -> Surface:
-    #     background = background.subsurface(Rect(x, y, self.width, self.height))
-    #
-    #     # alpha_white = Surface((self.width, self.height)).convert_alpha()
-    #     # alpha_white.fill((255, 255, 255, 75))
-    #
-    #     # background.blit(alpha_white, (0, 0))
-    #     return background
+    def _create_background(self, background: Surface) -> Surface:
+        return background.subsurface(
+            Rect(*self.pos_bg, self.width, self.height)
+        )
 
+    @abstractmethod
     def update(self, game_data: GameDataContainer):
         pass
 
+    @abstractmethod
     def render(self):
         pass
 

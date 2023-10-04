@@ -24,14 +24,12 @@ class SinglePlayerContainer(Container, GameSounds):
         self.sp_surface.blit(pygame.image.load(BACKGROUND), (0, 0))
 
         self.manager = pygame_gui.UIManager((WINDOWWIDTH, WINDOWHEIGHT))
+        self.sp_surface.blit(pygame.image.load(game_field_frame), (game_field_pos_x - 39, game_field_pos_y - 46))
+
         self.sp_ui_menu = SinglePlayerMenu(self.manager, self.game_data, self.sp_surface, self.music)
 
-        self.sp_surface.blit(pygame.image.load(game_field_frame),
-                             (game_field_pos_x - 39, game_field_pos_y - 46))
-
-        self.sp_surface_background = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+        self.sp_surface_background = Surface((WINDOWWIDTH, WINDOWHEIGHT))
         self.sp_surface_background.blit(self.sp_surface, (0, 0))
-        self.field_refresh_flag = False
 
     @property
     def status(self):
@@ -68,15 +66,13 @@ class SinglePlayerContainer(Container, GameSounds):
             self.manager.process_events(event)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    print(self.sp_ui_menu.pause_state)
-                    if not self.sp_ui_menu.pause_state:
-                        self.sp_surface_background.blit(pygame.display.get_surface(), (0, 0))
-                    else:
-                        self.field_refresh_flag = True
                     self.sp_ui_menu.key_esc_down()
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 self.sp_ui_menu.button_pressed(event)
+
+            if event.type == pygame_gui.UI_BUTTON_ON_HOVERED or event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
+                self.sp_ui_menu.render_menu()
 
     def update(self, time_delta: float):
         if not self.sp_ui_menu.pause_state:
@@ -89,16 +85,10 @@ class SinglePlayerContainer(Container, GameSounds):
             self.manager.update(time_delta)
 
     def render(self):
-        if self.field_refresh_flag:
-            self.field_refresh_flag = False
-            self.sp_surface.blit(self.sp_surface_background, (0, 0))
-
-        game_field_surface = self.renderer.render(self.game_data)
-        self.sp_surface.blit(game_field_surface, (game_field_pos_x, game_field_pos_y))
-        self.sp_surface.blit(self.sp_ui_menu.render(), (0, 0))
-
-        if self.sp_ui_menu.pause_state:
-            self.manager.draw_ui(self.sp_surface)
+        if not self.sp_ui_menu.pause_state:
+            game_field_surface = self.renderer.render(self.game_data)
+            self.sp_surface.blit(game_field_surface, (game_field_pos_x, game_field_pos_y))
+            self.sp_ui_menu.render()
 
         self.window_surface.blit(self.sp_surface, (0, 0))
 

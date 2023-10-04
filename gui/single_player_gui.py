@@ -37,7 +37,11 @@ class SinglePlayerMenu:
         self.level = LevelBoxElement(self.level_elem_x, self.level_elem_y, self.sp_surface, game_data)
         self.rows = RowsBoxElement(self.rows_elem_x, self.rows_elem_y, self.sp_surface, game_data)
 
-        self.gui_content_surface = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT), pygame.SRCALPHA)
+        self.giu_elements = [self.next_figure, self.score, self.level, self.rows]
+
+        self.screenshot = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT), pygame.SRCALPHA)
+
+        self.manager = manager
 
         self.sp_ui_menu_panel = pygame_gui.elements.ui_panel.UIPanel(
             relative_rect=pygame.Rect((175, 200), (250, 400)),
@@ -45,7 +49,7 @@ class SinglePlayerMenu:
             visible=False
         )
 
-        #elements of ESC menu
+        # elements of ESC menu
         self.sp_btm_button = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((25, 275), (200, 100)),
             text='Back to Menu',
@@ -63,6 +67,12 @@ class SinglePlayerMenu:
         )
 
     def key_esc_down(self):
+        if self.pause_state:
+            self.load_screen()
+        else:
+            self.save_screen()
+            self.manager.draw_ui(self.sp_surface)
+
         self.sp_ui_menu_panel.visible = not self.sp_ui_menu_panel.visible
         self.sp_btm_button.visible = not self.sp_btm_button.visible
         self.sp_mute_music_button.visible = not self.sp_mute_music_button.visible
@@ -80,28 +90,20 @@ class SinglePlayerMenu:
                 self.music.set_volume(0.5)
 
     def update(self, game_data: GameDataContainer):
+        for element in self.giu_elements:
+            element.update(game_data)
 
-        self.next_figure.update(game_data)
-        self.score.update(game_data)
-        self.level.update(game_data)
-        self.rows.update(game_data)
+    def render(self):
+        for element in self.giu_elements:
+            if element.is_changed:
+                element.render()
 
-    def render (self):
+    def render_menu(self):
+        self.load_screen()
+        self.manager.draw_ui(self.sp_surface)
 
-        self.gui_content_surface.fill((0, 0, 0, 0))
+    def save_screen(self):
+        self.screenshot.blit(self.sp_surface, (0, 0))
 
-        if self.next_figure.is_changed:
-            self.gui_content_surface.blit(self.next_figure.render(), (self.next_figure.pos_x_bg, self.next_figure.pos_y_bg))
-
-        if self.score.is_changed:
-            self.gui_content_surface.blit(self.score.render(), (self.score.pos_x_bg, self.score.pos_y_bg))
-
-        if self.level.is_changed:
-            self.gui_content_surface.blit(self.level.render(), (self.level.pos_x_bg, self.level.pos_y_bg))
-
-        if self.rows.is_changed:
-            self.gui_content_surface.blit(self.rows.render(), (self.rows.pos_x_bg, self.rows.pos_y_bg))
-
-        return self.gui_content_surface
-
-
+    def load_screen(self):
+        self.sp_surface.blit(self.screenshot, (0, 0))
