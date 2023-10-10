@@ -21,8 +21,8 @@ class GuiElement(ABC):
 
     def __init__(self, x: int, y: int, background: Surface):
         self.pos_frame = (x, y)
-        self.pos_bg = (x + self.d_bg[0], x + self.d_bg[1])
-        self.pos_label = (x + self.d_label[0], x + self.d_label[1])
+        self.pos_bg = (x + self.d_bg[0], y + self.d_bg[1])
+        self.pos_label = (x + self.d_label[0], y + self.d_label[1])
 
         self.background = self._create_background(background)
         self.is_changed = True
@@ -37,6 +37,6 @@ class GuiElement(ABC):
         pass
 
     @abstractmethod
-    def render(self):
+    def render(self, background: Surface):
         pass
 

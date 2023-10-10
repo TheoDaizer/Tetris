@@ -5,22 +5,14 @@ from pygame_gui.ui_manager import UIManager
 from pygame.surface import Surface
 
 from game import GameDataContainer, GameFieldRenderer
-from constants import *
+from constants import WINDOWWIDTH, WINDOWHEIGHT
+import gui.gui_constants as g_const
 from pygame.event import Event
 
 from .gui_elements import NextFigureElement, ScoreBoxElement, LevelBoxElement, RowsBoxElement
 
 
 class SinglePlayerMenu:
-
-    next_fig_elem_x = 426
-    next_fig_elem_y = 135
-    score_elem_x = 426
-    score_elem_y = 325
-    level_elem_x = 426
-    level_elem_y = 460
-    rows_elem_x = 426
-    rows_elem_y = 595
 
     def __init__(self, manager: UIManager, game_data: GameDataContainer, sp_surface: Surface, music):
 
@@ -32,10 +24,10 @@ class SinglePlayerMenu:
         self.pause_state = False
         self.is_game_over = False
 
-        self.next_figure = NextFigureElement(self.next_fig_elem_x, self.next_fig_elem_y, self.sp_surface, game_data)
-        self.score = ScoreBoxElement(self.score_elem_x, self.score_elem_y, self.sp_surface, game_data)
-        self.level = LevelBoxElement(self.level_elem_x, self.level_elem_y, self.sp_surface, game_data)
-        self.rows = RowsBoxElement(self.rows_elem_x, self.rows_elem_y, self.sp_surface, game_data)
+        self.next_figure = NextFigureElement(g_const.elem_x, g_const.next_fig_elem_y, self.sp_surface, game_data)
+        self.score = ScoreBoxElement(g_const.elem_x, g_const.score_elem_y, self.sp_surface, game_data)
+        self.level = LevelBoxElement(g_const.elem_x, g_const.level_elem_y, self.sp_surface, game_data)
+        self.rows = RowsBoxElement(g_const.elem_x, g_const.rows_elem_y, self.sp_surface, game_data)
 
         self.giu_elements = [self.next_figure, self.score, self.level, self.rows]
 
@@ -96,7 +88,7 @@ class SinglePlayerMenu:
     def render(self):
         for element in self.giu_elements:
             if element.is_changed:
-                element.render()
+                element.render(self.sp_surface)
 
     def render_menu(self):
         self.load_screen()

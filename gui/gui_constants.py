@@ -18,5 +18,13 @@ game_field_pos_y = 80
 game_field_pos_x2 = 660
 game_field_pos_y2 = 880
 
+elem_x = 426
+next_fig_elem_y = 135
+score_elem_y = 325
+level_elem_y = 460
+rows_elem_y = 595
+
 font_source = "resources/MightyKingdom.ttf"
+text_offset = -5
+
 game_field_frame = "resources/game_field_frame.png"
